@@ -1,0 +1,232 @@
+{
+  "uptime": "The time since the board is turned on",
+  "cpu": {
+    "total": {
+      "user": "User percentage utilization (If a core is offline, this data is not key is not available)",
+      "nice": "Nice percentage utilization (If a core is offline, this data is not key is not available)",
+      "system": "System percentage utilization (If a core is offline, this data is not key is not available)",
+      "idle": "Idle percentage (If a core is offline, this data is not key is not available)"
+    },
+    "cpu": [
+      { 
+        "Giuseppe_info": "Those info are available for all cpu cores",
+        "online": "Status core (bool)",
+        "governor": "Type of governor running on the core",
+        "freq": {
+          "min": "Minimum frequency of the core (kHz) for each sample",
+          "max": "Maximum frequency of the core (kHz) for each sample",
+          "cur": "Current frequency of the core (kHz) for each sample"
+        },
+        "idle_state": {
+          "WFI": "??",
+          "c7": "??"
+        },
+        "model": "CPU core model type",
+        "user": "User percentage utilization (If a core is offline, this data is not key is not available)",
+        "nice": "Nice percentage utilization (If a core is offline, this data is not key is not available)",
+        "system": "System percentage utilization (If a core is offline, this data is not key is not available)",
+        "idle": "Idle percentage (If a core is offline, this data is not key is not available)"
+      }
+    ]
+  },
+  "gpu": {
+    "gpu": {
+      "type": "Type of GPU (integrated, discrete)",
+      "status": {
+        "railgate": "Status Railgate (a railgate is a mechanism that controls the power delivery to different units of the GPU) (bool)",
+        "tpc_pg_mask": "Status TPC PG Mask (NVP model) (TPC means Tensor Processor Cores and PG means Power Governor while NVP is the nvidia power management tool)",
+        "3d_scaling": "Status 3D scaling (bool)",
+        "load": "Current GPU load (float)"
+      },
+      "freq": {
+        "governor": "Name GPU governor (Name GPU governor)",
+        "cur": "Current GPU frequency in kHz",
+        "max": "Maximum GPU frequency in kHz",
+        "min": "Minimum GPU frequency in kHz"
+      },
+      "power_control": "auto"
+    }
+  },
+  "processes": [
+    [
+      "PID process running",
+      "User start the process",
+      "GPU used (I integrated, dX: discrete GPU with number graphic card (next release)",
+      "Tyoe of process",
+      "Priority",
+      "State process",
+      "CPU percent utilization",
+      "Memory occupied (Kb)",
+      "GPU Memory occupied (Kb)",
+      "process name (str)"
+    ]
+  ],
+  "mem": {
+    "RAM": {
+      "tot": "Total RAM in KB",
+      "used": "Total used RAM in KB",
+      "free": "Free RAM in KB",
+      "buffers": "Buffered RAM in KB",
+      "cached": "Cached RAM in KB",
+      "shared": "Shared RAM in KB, for NVIDIA Jetson the RAM used from GPU",
+      "lfb": "Large Free Block in 4MB"
+    },
+    "SWAP": {
+      "tot": "Total SWAP in KB",
+      "used": "Total used SWAP in KB",
+      "cached": "Cached RAM in KB",
+      "table": {
+        "/dev/zram0": {
+          "Giuseppe_info": "Those info are available for all swap memory partitions dedicated to a specific partition",
+          "type": "Type of partition",
+          "prio": "Priority partition",
+          "size": "Size partition in KB",
+          "used": "Used part of this partition in KB",
+          "boot": "Check if this swap starts on boot (bool)"
+        }
+      }
+    },
+    "EMC": {
+      "Giuseppe_info": "EMC Percentage of bandwidth where EMC stands for External Memory Controller ",
+      "cur": "Current frequency of the core (kHz)",
+      "override": "???",
+      "val": "Percentage of bandwidth used relative to running frequency",
+      "online": "Status EMC (bool)"
+    },
+    "IRAM": {
+      "Giuseppe_info": "memory local to the video hardware engine",
+      "tot": "Total IRAM in KB, where IRAM is ",
+      "used": "Total used IRAM in KB",
+      "lfb": "Large Free Block in 4MB"
+    }
+  },
+  "engines": {
+    "APE": {
+      "APE": {
+        "Giuseppe_info": "NVidia video Decoder (fully accelerated hardware-based video decoding)",
+        "online": "Status of the engine",
+        "cur": "Current frequency of the core in kHz"
+      }
+    },
+    "NVDEC": {
+      "Giuseppe_info": "NVidia video Decoder (fully accelerated hardware-based video decoding)",
+      "NVDEC": {
+        "online": "Status of the engine",
+        "cur": "Current frequency of the core in kHz"
+      }
+    },
+    "NVENC": {
+      "Giuseppe_info": "NVidia video Encoder (fully accelerated hardware-based video encoding)",
+      "NVENC": {
+        "online": "Status of the engine",
+        "cur": "Current frequency of the core in kHz"
+      }
+    },
+    "NVJPG": {
+      "Giuseppe_info": "NVdia GPU-accelerated library for decoding, encoding and transcoding JPEG format images",
+      "NVJPG": {
+        "online": "Status of the engine",
+        "cur": "Current frequency of the core in kHz"
+      }
+    },
+    "SE": {
+      "Giuseppe_info": "NVidia Security Engines",
+      "SE": {
+        "online": "Status of the engine",
+        "cur": "Current frequency of the core in kHz"
+      }
+    },
+    "VIC": {
+      "Giuseppe_info": "NVidia Video Image Compositor",
+      "VIC03": {
+        "online": "Status of the engine",
+        "cur": "Current frequency of the core in kHz"
+      }
+    }
+  },
+  "temperature": {
+    "Giuseppe_info": "all measures are with a 0.5 °C precision margin",
+    "AO": {
+      "temp": 38.5,
+      "online": true
+    },
+    "CPU": {
+      "temp": 29,
+      "online": true
+    },
+    "GPU": {
+      "temp": 30.5,
+      "online": true
+    },
+    "PLL": {
+      "temp": 28.5,
+      "online": true
+    },
+    "thermal": {
+      "temp": 29.5,
+      "online": true
+    }
+  },
+  "power": {
+    "rail": {
+      "POM_5V_CPU": {
+        "volt": "Gets rail voltage in millivolts",
+        "curr": "Gets rail current in milliamperes",
+        "power": "Gets rail power in milliwatt",
+        "warn": "Gets rail average current limit in milliamperes",
+        "crit": "Gets rail instantaneous current limit in milliamperes",
+        "online": "If sensor is online",
+        "avg": "Gets rail power average in milliwatt"
+      },
+      "POM_5V_GPU": {
+        "volt": "Gets rail voltage in millivolts",
+        "curr": "Gets rail current in milliamperes",
+        "power": "Gets rail power in milliwatt",
+        "warn": "Gets rail average current limit in milliamperes",
+        "crit": "Gets rail instantaneous current limit in milliamperes",
+        "online": "If sensor is online",
+        "avg": "Gets rail power average in milliwatt"
+      }
+    },
+    "tot": {
+      "Giuseppe_info": "A dictionary with all thermal rails",
+      "volt": "Gets rail voltage in millivolts",
+      "curr": "Gets rail current in milliamperes",
+      "power": "Gets rail power in milliwatt",
+      "warn": "Gets rail average current limit in milliamperes",
+      "crit": "Gets rail instantaneous current limit in milliamperes",
+      "online": "If sensor is online",
+      "avg": "Gets rail power average in milliwatt",
+      "name": "POM_5V_IN"
+    }
+  },
+  "fan": {
+    "tegra_pwmfan": {
+      "speed": [
+        "List of speed between [0, 100]"
+      ],
+      "rpm": [
+        "List of RPM for each fan"
+      ],
+      "profile": "current profile in fan"
+    }
+  },
+  "jc": {
+    "enable": false,
+    "thread": "inactive",
+    "config": true,
+    "boot": false
+  },
+  "nvp": {
+    "Giuseppe_info": "Model control voltage regulators, and power tree to optimize power efficiency",
+    "status": [
+      true,
+      true
+    ],
+    "thread": false,
+    "model": {
+      "name": "MAXN",
+      "id": 0
+    }
+  }
+}
