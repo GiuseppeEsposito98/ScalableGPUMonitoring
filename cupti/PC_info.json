@@ -1,0 +1,78 @@
+{"functionName": "Dynamic kernel name",
+
+"pcOffset": "",
+
+"_not_issued": ["Collected using warp scheduler state sampling.", 
+                "They are incremented only on cycles in which the warp scheduler issued no instruction"],
+
+"branch_resolving": ["The warp was issued but not executed because it has to wait for an if clause to be verified ",
+                    "that it is true or not"],
+
+"dispatch_stall": [" (The warp was issued but not executed) A warp stalled during dispatch has an instruction ready to issue, but ",
+                    "the dispatcher holds back issuing the warp due to other conflicts or events."],
+
+"drain": ["(The warp was issued but not executed) Warp was stalled after EXIT waiting for all outstanding memory operations", 
+            "to complete so that warp’s resources can be freed. A high number of stalls due to draining warps typically occurs", 
+            "when a lot of data is written to memory towards the end of a kernel."],
+
+"imc_miss": ["(The warp was issued but not executed) Warp was stalled waiting for an immediate constant cache (IMC) miss. ",
+            "A read from constant memory costs one memory read from device memory only on a cache miss; otherwise,", 
+            "it just costs one read from the constant cache. Immediate constants are encoded into the SASS instruction",
+            "as ‘c[bank][offset]’. Accesses to different addresses by threads within a warp are serialized, thus the cost scales", 
+            "linearly with the number of unique addresses read by all threads within a warp."],
+
+"lg_throttle": ["(The warp was issued but not executed) Warp was stalled waiting for the L1 instruction queue for local and global (LG)", 
+                "memory operations to be not full. Typically, this stall occurs only when executing local or global memory ",
+                "instructions extremely frequently. Avoid redundant global memory accesses. "],
+
+"long_scoreboard": ["(The warp was issued but not executed) Warp was stalled waiting for a scoreboard dependency on a" ,
+                    "L1TEX (local, global, surface, texture) operation. Find the instruction producing the data being waited", 
+                    "upon to identify the culprit."],
+
+"math_pipe_throttle": ["(The warp was issued but not executed) Warp was stalled waiting for the execution pipe to be available." ,
+                        "This stall occurs when all active warps execute their next instruction on a specific, oversubscribed", 
+                        "math pipeline. "],
+"membar":["(The warp was issued but not executed) Warp was stalled waiting on a memory barrier. Avoid executing any unnecessary",
+            "memory barriers and assure that any",
+            "outstanding memory operations are fully optimized for the target architecture."],
+
+"mio_throttle":[" (The warp was issued but not executed) Warp was stalled waiting for the MIO (memory input/output) instruction", 
+                "queue to be not full. This stall reason is high in cases of extreme utilization of the MIO pipelines,", 
+                "which include special math instructions, dynamic branches, as well as shared memory instructions."],
+
+"misc": "(The warp was issued but not executed) Warp was stalled for a miscellaneous hardware reason.",
+
+"no_instructions": ["(The warp was issued but not executed) Warp was stalled waiting to be selected to fetch an instruction or ",
+                    "waiting on an instruction cache miss. A high number of warps not having an instruction fetched is typical ",
+                    "for very short kernels with less than one full wave of work in the grid. Excessively jumping across",
+                    "large blocks of assembly code can also lead to more warps stalled for this reason, if this causes misses ",
+                    "in the instruction cache. See also the related Branch Resolving state."],
+
+"not_selected": ["(The warp was issued but not executed) Warp was stalled waiting for the micro scheduler to select", 
+                "the warp to issue. Not selected warps are eligible warps that were not picked by the scheduler to issue" ,
+                "that cycle as another warp was selected. A high number of not selected warps typically means you have sufficient",
+                 "warps to cover warp latencies and you may consider reducing the number of active warps to possibly increase cache",
+                 " coherence and data locality."],
+
+"selected": "(The warp was issued but not executed) Warp was selected by the micro scheduler and issued an instruction.",
+
+"short_scoreboard": ["(The warp was issued but not executed) Warp was stalled waiting for a scoreboard dependency on a" ,
+                    "MIO (memory input/output) operation (not to L1TEX). The primary reason for a high number of stalls" ,
+                    "due to short scoreboards is typically memory operations to shared memory. Other reasons include frequent" ,
+                    "execution of special math instructions (e.g. MUFU) or dynamic branching (e.g. BRX, JMX)." ,
+                    "Consult the Memory Workload Analysis section to verify if there are shared memory operations and reduce bank ",
+                    "conflicts, if reported."],
+
+"tex_throttle": ["(The warp was issued but not executed) Warp was stalled waiting for the L1 instruction queue for texture ",
+                "operations to be not full. This stall reason is high in cases of extreme utilization of the L1TEX pipeline. ",
+                "Try issuing fewer texture fetches, surface loads, surface stores, or decoupled math operations. If applicable, ",
+                "consider combining multiple lower-width memory operations into fewer wider memory operations and try interleaving",
+                " memory operations and math instructions. Consider converting texture lookups or surface loads into global ",
+                "memory lookups. Texture can accept four threads’ requests per cycle, whereas global accepts 32 threads."],
+
+"wait": ["(The warp was issued but not executed) Warp was stalled waiting on a fixed latency execution dependency." ,
+        "Typically, this stall reason should be very low and only shows up as a top contributor in already highly",
+        "optimized kernels. Try to hide the corresponding instruction latencies by increasing the number of active warps,",
+        "restructuring the code or unrolling loops. Furthermore, consider switching to lower-latency instructions,", 
+        "e.g. by making use of fast math compiler options."],
+"warpgroup_arrive": "(The warp was issued but not executed) Warp was stalled waiting on a WARPGROUP.ARRIVES or WARPGROUP.WAIT instruction."}
