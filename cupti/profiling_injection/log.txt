@@ -1,0 +1,39 @@
+Expect reduction to equal 5.00034e+06
+Sum reduction = 5.00034e+06
+
+Context 0x5625b7471450, device 0 (NVIDIA GeForce RTX 4060 Laptop GPU) session 1:
+
+Range Name                              Metric Name                                                                                         Metric Value
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+0                                       sm__cycles_elapsed.avg                                                                              2.96217e+06
+1                                       sm__cycles_elapsed.avg                                                                              3.37579e+06
+2                                       sm__cycles_elapsed.avg                                                                              3.93825e+06
+3                                       sm__cycles_elapsed.avg                                                                              4.73635e+06
+4                                       sm__cycles_elapsed.avg                                                                              5.91666e+06
+5                                       sm__cycles_elapsed.avg                                                                              7.8973e+06
+6                                       sm__cycles_elapsed.avg                                                                              1.18223e+07
+7                                       sm__cycles_elapsed.avg                                                                              2.35715e+07
+0                                       smsp__sass_thread_inst_executed_op_dadd_pred_on.avg                                                 13020.8
+1                                       smsp__sass_thread_inst_executed_op_dadd_pred_on.avg                                                 14880.9
+2                                       smsp__sass_thread_inst_executed_op_dadd_pred_on.avg                                                 17361.1
+3                                       smsp__sass_thread_inst_executed_op_dadd_pred_on.avg                                                 20833.3
+4                                       smsp__sass_thread_inst_executed_op_dadd_pred_on.avg                                                 26041.7
+5                                       smsp__sass_thread_inst_executed_op_dadd_pred_on.avg                                                 34722.2
+6                                       smsp__sass_thread_inst_executed_op_dadd_pred_on.avg                                                 52083.3
+7                                       smsp__sass_thread_inst_executed_op_dadd_pred_on.avg                                                 104167
+0                                       smsp__sass_thread_inst_executed_op_dfma_pred_on.avg                                                 0
+1                                       smsp__sass_thread_inst_executed_op_dfma_pred_on.avg                                                 0
+2                                       smsp__sass_thread_inst_executed_op_dfma_pred_on.avg                                                 0
+3                                       smsp__sass_thread_inst_executed_op_dfma_pred_on.avg                                                 0
+4                                       smsp__sass_thread_inst_executed_op_dfma_pred_on.avg                                                 0
+5                                       smsp__sass_thread_inst_executed_op_dfma_pred_on.avg                                                 0
+6                                       smsp__sass_thread_inst_executed_op_dfma_pred_on.avg                                                 0
+7                                       smsp__sass_thread_inst_executed_op_dfma_pred_on.avg                                                 0
+0                                       smsp__inst_executed_pipe_fp64.avg.pct_of_peak_sustained_active                                      5.28467
+1                                       smsp__inst_executed_pipe_fp64.avg.pct_of_peak_sustained_active                                      5.29691
+2                                       smsp__inst_executed_pipe_fp64.avg.pct_of_peak_sustained_active                                      5.29351
+3                                       smsp__inst_executed_pipe_fp64.avg.pct_of_peak_sustained_active                                      5.28833
+4                                       smsp__inst_executed_pipe_fp64.avg.pct_of_peak_sustained_active                                      5.28829
+5                                       smsp__inst_executed_pipe_fp64.avg.pct_of_peak_sustained_active                                      5.28366
+6                                       smsp__inst_executed_pipe_fp64.avg.pct_of_peak_sustained_active                                      5.28979
+7                                       smsp__inst_executed_pipe_fp64.avg.pct_of_peak_sustained_active                                      5.30524

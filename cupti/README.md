@@ -82,7 +82,7 @@ Enumeration paragraph gives you an idea on how you can apply rollups and which s
 
 https://docs.nvidia.com/cupti/main/main.html#enumeration
 
-## 2.2
+## 2.2  Perfworks metrics monitoring for Compute Capability 7.0
 In the past it was possible to query all the metrics avaialable on a specific hardware architecture. Now (for architectures with compute capabilities higher than 7.0) it is deprecated but the following table provides available metrics wirh CC > 7.0
 
 Perfworks metrics starting with sm__ are collected per-SM. Metrics starting with smsp__ are collected per-SM subpartition. However, all corresponding CUPTI metrics are collected per-SM, only.
@@ -91,8 +91,36 @@ https://docs.nvidia.com/cupti/main/main.html#id21
 
 If you check the file at the path "cupti/profiling_injection/injection.cpp" I added smsp__inst_executed_pipe_fp64.avg.pct_of_peak_sustained_active metric which basically computes the double_precision_fu_utilization
 
+## 2.3 Instruction to run the profiling on the "simple_target" application
+1. Check that the path to the cuda folder is correct
+2. Then, use tha MakeFile to compile the target application
+```bash
+cd profiling_injection
+make simple_target
+``` 
+3. So compile the library that is going to profile the generic application
+```bash
+make libinjection.so
+``` 
+4. At this point you can set 2 environment variables:
+    - INJECTION_KERNEL_COUNT: Since injection doesn't know how many kernels a target application may run, it must pick a number of kernels to run in a single session, and once this many kernels run, it ends the session and restarts. This sets the number of kernels in a session, defaulting to 10.
+    - INJECTION_METRICS: This sets the metrics to gather, separated by space, comma, or semicolon.  Default metrics are:
+        - sm__cycles_elapsed.avg
+        - smsp__sass_thread_inst_executed_op_dadd_pred_on.avg
+        - smsp__sass_thread_inst_executed_op_dfma_pred_on.avg
+5. For example, if you need to monitor 20 kernels and you want to monitor the "achieved occupancy" you can run the folling lines
+```bash
+export INJECTION_KERNEL_COUNT=20
+export INJECTION_METRICS="sm__warps_active.avg.pct_of_peak_sustained_active"
+``` 
+6. Eventually, you can run the following command with the admin permissions and see the results dump in the log.txt file
+```bash
+sudo env CUDA_INJECTION64_PATH=./libinjection.so ./simple_target > log.txt
+``` 
+
 ### 2.2 Requirements
 Available in CUDA 7.0 and above
+admin permissions (sudo is required to run the scripts)
 
 # CONCLUSION
 I think that we should, if possible, mix the profiling metrics that we get for a specific range (to be understood) **2.2** or directly the info gathered from the performance counters (stall reasons) **1.1** that we gather with a specific sampling rate. In alternative we can try to modify "cupti/pc_sampling_continuous/pc_sampling_continuous.cpp" somehow to gather further metrics but I wouldn't have a plan for this. 
