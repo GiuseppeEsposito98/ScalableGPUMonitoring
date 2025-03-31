@@ -7,9 +7,9 @@ ifndef OS
 endif
 
 CUDA_INSTALL_PATH ?= /usr/local/cuda/
-PROFILER_HOST_UTILS_SRC ?= ../extensions/src/profilerhost_util
+PROFILER_HOST_UTILS_SRC ?= ../00_extensions/src/profilerhost_util
 NVCC := "$(CUDA_INSTALL_PATH)/bin/nvcc"
-INCLUDES := -I"$(CUDA_INSTALL_PATH)/include" -I$(CUDA_INSTALL_PATH)include -I../extensions/include/profilerhost_util -I../extensions/include/c_util -I../common
+INCLUDES := -I"$(CUDA_INSTALL_PATH)/include" -I$(CUDA_INSTALL_PATH)include -I../00_extensions/include/profilerhost_util -I../00_extensions/include/c_util -I../00_common
 
 TARGET_ARCH ?= $(HOST_ARCH)
 TARGET_OS ?= $(shell uname | tr A-Z a-z)
@@ -32,7 +32,7 @@ else
 endif
 
 ifeq ($(OS), Windows_NT)
-    LIBS = -lcuda -L $(LIB_PATH) -lcupti -lnvperf_host -lnvperf_target -L ..\extensions\src\profilerhost_util -lprofilerHostUtil
+    LIBS = -lcuda -L $(LIB_PATH) -lcupti -lnvperf_host -lnvperf_target -L ..\00_extensions\src\profilerhost_util -lprofilerHostUtil
     OBJ = obj
     LIBEXT = lib
     LIBPREFIX =
@@ -40,14 +40,14 @@ ifeq ($(OS), Windows_NT)
 else
     ifeq ($(OS), Darwin)
         export DYLD_LIBRARY_PATH := $(DYLD_LIBRARY_PATH):$(LIB_PATH)
-        LIBS = -Xlinker -framework -Xlinker cuda -L $(LIB_PATH) -lcupti -lnvperf_host -lnvperf_target -L ../extensions/src/profilerhost_util -lprofilerHostUtil
+        LIBS = -Xlinker -framework -Xlinker cuda -L $(LIB_PATH) -lcupti -lnvperf_host -lnvperf_target -L ../00_extensions/src/profilerhost_util -lprofilerHostUtil
     else
         LIBS :=
         ifeq ($(HOST_ARCH), $(TARGET_ARCH))
             export LD_LIBRARY_PATH := $(LD_LIBRARY_PATH):$(LIB_PATH)
             LIBS = -L $(EXTRAS_LIB_PATH)
         endif
-        LIBS += $(TARGET_CUDA_PATH) -lcuda -L $(LIB_PATH) -lcupti -lnvperf_host -lnvperf_target -L ../extensions/src/profilerhost_util -lprofilerHostUtil
+        LIBS += $(TARGET_CUDA_PATH) -lcuda -L $(LIB_PATH) -lcupti -lnvperf_host -lnvperf_target -L ../00_extensions/src/profilerhost_util -lprofilerHostUtil
     endif
     OBJ = o
     LIBEXT = a

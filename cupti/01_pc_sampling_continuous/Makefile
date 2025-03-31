@@ -8,7 +8,7 @@ endif
 
 CUDA_INSTALL_PATH ?= /usr/local/cuda/
 NVCC := "$(CUDA_INSTALL_PATH)/bin/nvcc"
-INCLUDES := -I"$(CUDA_INSTALL_PATH)/include" -I$(CUDA_INSTALL_PATH)include -I../common
+INCLUDES := -I"$(CUDA_INSTALL_PATH)/include" -I$(CUDA_INSTALL_PATH)include -I../00_common
 
 ifeq ($(OS),Windows_NT)
     LIB_PATH ?= ..\..\lib64

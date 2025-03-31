@@ -1,5 +1,5 @@
 #
-# Copyright 2020-2021 NVIDIA Corporation. All rights reserved
+# Copyright 2021 NVIDIA Corporation. All rights reserved
 #
 ifndef OS
     OS   := $(shell uname)
@@ -8,7 +8,7 @@ endif
 
 CUDA_INSTALL_PATH ?= /usr/local/cuda/
 NVCC := "$(CUDA_INSTALL_PATH)/bin/nvcc"
-INCLUDES := -I"$(CUDA_INSTALL_PATH)/include" -I$(CUDA_INSTALL_PATH)include -I../common
+INCLUDES := -I"$(CUDA_INSTALL_PATH)/include" -I$(CUDA_INSTALL_PATH)include -I../00_common
 
 ifeq ($(OS),Windows_NT)
     LIB_PATH ?= ..\..\lib64
@@ -17,20 +17,24 @@ else
     LIB_PATH ?= $(CUDA_INSTALL_PATH)/lib64
 endif
 
+# Point to the necessary cross-compiler.
+NVCCFLAGS :=
 ifeq ($(OS),Windows_NT)
     export PATH := $(PATH):$(LIB_PATH)
-    LIBS= -lcuda -L $(LIB_PATH) -lcupti -lpcsamplingutil
+    LIBS= -L $(LIB_PATH) -lcuda -lcupti -ldetours
+    LIBNAME := libcupti_trace_injection.dll
 else
     ifeq ($(OS), Darwin)
         export DYLD_LIBRARY_PATH := $(DYLD_LIBRARY_PATH):$(LIB_PATH)
-        LIBS= -Xlinker -framework -Xlinker cuda -L $(EXTRAS_LIB_PATH) -L $(LIB_PATH) -lcupti -lpcsamplingutil
+        LIBS= -Xlinker -framework -Xlinker cuda -L $(EXTRAS_LIB_PATH) -L $(LIB_PATH) -lcupti
     else
         export LD_LIBRARY_PATH := $(LD_LIBRARY_PATH):$(LIB_PATH)
-        LIBS = -L $(LIB_PATH) -lcuda -L $(EXTRAS_LIB_PATH) -lcupti -lpcsamplingutil
+        LIBS = -L $(LIB_PATH) -lcuda -L $(EXTRAS_LIB_PATH) -lcupti
     endif
+    LIBNAME := libcupti_trace_injection.so
+    NVCCFLAGS += -Xcompiler -fPIC
 endif
 
-NVCCFLAGS :=
 ifneq ($(TARGET_ARCH), $(HOST_ARCH))
     ifeq ($(TARGET_ARCH), aarch64)
         ifeq ($(TARGET_OS), linux)
@@ -52,8 +56,8 @@ ifneq ($(TARGET_ARCH), $(HOST_ARCH))
     endif
 endif
 
-all: pc_sampling_utility
-pc_sampling_utility: pc_sampling_utility.cpp
-	$(NVCC) $(NVCC_COMPILER) $(NVCCFLAGS) $(INCLUDES) -o pc_sampling_utility $< $(LIBS)
+all: cupti_trace_injection
+cupti_trace_injection: cupti_trace_injection.cpp
+	$(NVCC) $(NVCC_COMPILER) $(NVCCFLAGS) $(INCLUDES) -o $(LIBNAME) -shared $< $(LIBS)
 clean:
-	rm -f pc_sampling_utility
+	rm -f $(LIBNAME) cupti_trace_injection.o

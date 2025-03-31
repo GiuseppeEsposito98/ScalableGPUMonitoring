@@ -1,0 +1,51 @@
+Calling CUPTI API: cuptiSubscribe(&globals.subscriberHandle, (CUpti_CallbackFunc)pTraceCallback, pUserData)
+Calling CUPTI API: cuptiEnableCallback(1, globals.subscriberHandle, CUPTI_CB_DOMAIN_RUNTIME_API, CUPTI_RUNTIME_TRACE_CBID_cudaDeviceReset_v3020)
+Calling CUPTI API: cuptiEnableCallback(1, globals.subscriberHandle, CUPTI_CB_DOMAIN_STATE, CUPTI_CBID_STATE_FATAL_ERROR)
+Calling CUPTI API: cuptiActivityRegisterCallbacks(BufferRequested, BufferCompleted)
+Activity buffer size = 8388608 bytes.
+Calling CUPTI API: cuptiActivityEnable(CUPTI_ACTIVITY_KIND_RUNTIME)
+Calling CUPTI API: cuptiActivityEnable(CUPTI_ACTIVITY_KIND_MEMCPY)
+Calling CUPTI API: cuptiActivityEnable(CUPTI_ACTIVITY_KIND_MEMSET)
+Calling CUPTI API: cuptiActivityEnable(CUPTI_ACTIVITY_KIND_CONCURRENT_KERNEL)
+Calling CUPTI API: cuptiEnableCallback(1, globals.subscriberHandle, CUPTI_CB_DOMAIN_RESOURCE, CUPTI_CBID_RESOURCE_GRAPHNODE_CREATED)
+Calling CUPTI API: cuptiEnableCallback(1, globals.subscriberHandle, CUPTI_CB_DOMAIN_RESOURCE, CUPTI_CBID_RESOURCE_GRAPHNODE_CLONED)
+Calling CUPTI API: cuptiEnableDomain(1, globals.subscriberHandle, CUPTI_CB_DOMAIN_RUNTIME_API)
+Device Name: NVIDIA GeForce RTX 4060 Laptop GPU
+Calling CUPTI API: cuptiUnsubscribe(globals.subscriberHandle)
+Calling CUPTI API: cuptiActivityFlushAll(1)
+RUNTIME [ 1743431966260849968, 1743431966344863053 ] duration 84013085, "cudaSetDevice_v3020", cbid 16, processId 84577, threadId 2536570880, correlationId 1
+RUNTIME [ 1743431966347097717, 1743431966347122084 ] duration 24367, "cudaStreamCreate_v3020", cbid 129, processId 84577, threadId 2536570880, correlationId 2
+RUNTIME [ 1743431966347125734, 1743431966347184621 ] duration 58887, "cudaMalloc_v3020", cbid 20, processId 84577, threadId 2536570880, correlationId 3
+RUNTIME [ 1743431966347185015, 1743431966347189196 ] duration 4181, "cudaMalloc_v3020", cbid 20, processId 84577, threadId 2536570880, correlationId 4
+RUNTIME [ 1743431966347189366, 1743431966347191277 ] duration 1911, "cudaMalloc_v3020", cbid 20, processId 84577, threadId 2536570880, correlationId 5
+RUNTIME [ 1743431966347194789, 1743431966347201448 ] duration 6659, "cudaGraphCreate_v10000", cbid 286, processId 84577, threadId 2536570880, correlationId 6
+RUNTIME [ 1743431966347201769, 1743431966347210770 ] duration 9001, "cudaGraphAddMemcpyNode_v10000", cbid 290, processId 84577, threadId 2536570880, correlationId 7
+RUNTIME [ 1743431966347210949, 1743431966347213050 ] duration 2101, "cudaGraphAddMemcpyNode_v10000", cbid 290, processId 84577, threadId 2536570880, correlationId 8
+RUNTIME [ 1743431966347213276, 1743431966349237066 ] duration 2023790, "cudaGraphAddKernelNode_v10000", cbid 289, processId 84577, threadId 2536570880, correlationId 9
+RUNTIME [ 1743431966349237522, 1743431966349245786 ] duration 8264, "cudaGraphAddKernelNode_v10000", cbid 289, processId 84577, threadId 2536570880, correlationId 10
+RUNTIME [ 1743431966349245995, 1743431966349247349 ] duration 1354, "cudaGraphAddMemcpyNode_v10000", cbid 290, processId 84577, threadId 2536570880, correlationId 11
+RUNTIME [ 1743431966349247880, 1743431966349299626 ] duration 51746, "cudaGraphInstantiate_v12000", cbid 443, processId 84577, threadId 2536570880, correlationId 12
+MEMCPY "HtoD" [ 1743431966349345978, 1743431966349363962 ] duration 17984, size 200000, srcKind PAGEABLE, dstKind DEVICE, correlationId 13
+	deviceId 0, contextId 1, streamId 13, graphId 2, graphNodeId 8589934592, channelId 10, channelType ASYNC_MEMCPY
+Graph node was created using API cudaGraphAddMemcpyNode with correlationId 7
+MEMCPY "HtoD" [ 1743431966349376346, 1743431966349394394 ] duration 18048, size 200000, srcKind PAGEABLE, dstKind DEVICE, correlationId 13
+	deviceId 0, contextId 1, streamId 15, graphId 2, graphNodeId 8589934593, channelId 11, channelType ASYNC_MEMCPY
+Graph node was created using API cudaGraphAddMemcpyNode with correlationId 8
+CONCURRENT_KERNEL [ 1743431966349405466, 1743431966349408250 ] duration 2784, "_Z9VectorAddPKiS0_Pii", correlationId 13, cacheConfigRequested 0, cacheConfigExecuted 0
+	grid [ 196, 1, 1 ], block [ 256, 1, 1 ], cluster [ 0, 0, 0 ], sharedMemory (static 0, dynamic 0)
+	deviceId 0, contextId 1, streamId 13, graphId 2, graphNodeId 8589934594, channelId 1, channelType COMPUTE
+Graph node was created using API cudaGraphAddKernelNode with correlationId 9
+CONCURRENT_KERNEL [ 1743431966349408506, 1743431966349410650 ] duration 2144, "_Z14VectorSubtractPKiS0_Pii", correlationId 13, cacheConfigRequested 0, cacheConfigExecuted 0
+	grid [ 196, 1, 1 ], block [ 256, 1, 1 ], cluster [ 0, 0, 0 ], sharedMemory (static 0, dynamic 0)
+	deviceId 0, contextId 1, streamId 13, graphId 2, graphNodeId 8589934595, channelId 1, channelType COMPUTE
+Graph node was created using API cudaGraphAddKernelNode with correlationId 10
+MEMCPY "DtoH" [ 1743431966349414010, 1743431966349430362 ] duration 16352, size 200000, srcKind DEVICE, dstKind PAGEABLE, correlationId 13
+	deviceId 0, contextId 1, streamId 13, graphId 2, graphNodeId 8589934596, channelId 12, channelType ASYNC_MEMCPY
+Graph node was created using API cudaGraphAddMemcpyNode with correlationId 11
+RUNTIME [ 1743431966349300627, 1743431966349500813 ] duration 200186, "cudaGraphLaunch_v10000", cbid 311, processId 84577, threadId 2536570880, correlationId 13
+RUNTIME [ 1743431966349501321, 1743431966349503024 ] duration 1703, "cudaStreamSynchronize_v3020", cbid 131, processId 84577, threadId 2536570880, correlationId 14
+RUNTIME [ 1743431966349503813, 1743431966349511380 ] duration 7567, "cudaFree_v3020", cbid 22, processId 84577, threadId 2536570880, correlationId 15
+RUNTIME [ 1743431966349511582, 1743431966349513979 ] duration 2397, "cudaFree_v3020", cbid 22, processId 84577, threadId 2536570880, correlationId 16
+RUNTIME [ 1743431966349514129, 1743431966349572341 ] duration 58212, "cudaFree_v3020", cbid 22, processId 84577, threadId 2536570880, correlationId 17
+RUNTIME [ 1743431966349572806, 1743431966349574948 ] duration 2142, "cudaDeviceSynchronize_v3020", cbid 165, processId 84577, threadId 2536570880, correlationId 18
+RUNTIME [ 1743431966349575302, 1743431966397221178 ] duration 47645876, "cudaDeviceReset_v3020", cbid 164, processId 84577, threadId 2536570880, correlationId 19
