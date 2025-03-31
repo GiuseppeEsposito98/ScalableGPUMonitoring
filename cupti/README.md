@@ -298,4 +298,4 @@ Each function (activity or kernel) invocation is assigned a unique correlation I
 
 **Question**: how do we choose a correct clock-frequency? Maybe look at **paragraph 5.3, step 2**
 
-**Question**: do we need concurrent execution of the kernels or we need them to be serialized? 
+**Question**: do we need concurrent execution of the kernels or we need them to be serialized?
