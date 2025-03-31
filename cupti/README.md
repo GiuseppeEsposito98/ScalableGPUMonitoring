@@ -186,7 +186,7 @@ export NVTX_INJECTION64_PATH="/usr/local/cuda-12/lib64/libcupti.so"
 ## 3.5 CUPTI (CUDA API and GPU + NVTX) trace Injection
 This sample shows how to build an injection library using the CUPTI activity and callback APIs. It can be used to trace CUDA APIs and GPU activities for any CUDA application. **It does not require the CUDA application to be modified.**
 
-## 3.4 Instructions to run the Activity tracing on any application (e.g., VectorAdd)
+## 3.6 Instructions to run the Activity tracing on any application (e.g., VectorAdd)
 1. Check that the path to the cuda folder is correct
 2. Then, use the MakeFile to compile the cuda script that includes the library for the activity tracing.
 ```bash
@@ -298,4 +298,4 @@ Each function (activity or kernel) invocation is assigned a unique correlation I
 
 **Question**: how do we choose a correct clock-frequency? Maybe look at **paragraph 5.3, step 2**
 
-**Question**: do we need concurrent execution of the kernels or we need them to be serialized?
+**Question**: do we need concurrent execution of the kernels or we need them to be serialized? 
