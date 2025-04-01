@@ -43,7 +43,7 @@ sudo exe.sh
 8. You will receive as output a .dat file which is a generic file format to store data. This will look like a binary file that actually contains a "log line" corresponding to each Performance Counter sample. In order to make it human readable you need copy it into the folder pc_sampling_utility
 9. Run the MakeFile
 ```bash
-cd ../pc_sampling_utility
+cd ../01_pc_sampling_utility
 make pc_sampling_utility
 ``` 
 10. An executable file is generated and you need to run it by specifying the path of the .dat file
@@ -89,7 +89,7 @@ If you check the file at the path "cupti/profiling_injection/injection.cpp" I ad
 1. Check that the path to the cuda folder is correct
 2. Then, use tha MakeFile to compile the target application
 ```bash
-cd profiling_injection
+cd 02_profiling_injection
 make simple_target
 ``` 
 3. So compile the library that is going to profile the generic application
@@ -274,12 +274,16 @@ The driver normally does not stay loaded when not in use. It takes some time to 
 
 ## 6.0 Let's try to understand, among all the available tools how many times the application is run
 1. **First try (approach)**: Try to see how many times the application kernel is lounched for each of the analysis that we have performed
-    - 01_pc_sampling_continuous: I think it adding an overhead but the application is run only ones
-    - 02_profiling_injection
-    - 03_activity_trace_async
-    - 03_cupti_nvtx
-    - 03_cupti_trace_injection
-    - 04_cuda_graphs_trace
+    - 01_pc_sampling_continuous: Read the following one
+    - 02_profiling_injection: Some Performance Counters (PCs) can be configured in order to compute metrics that allows to understand the appplication performance. However, the number of configurable PCs is limited, if we ask the profiler to compute too many metrics, it could require to rerun the application multiple times. This is unfeasible for real-time applications, for this reason: Profiling Injection can require the application to be run multiple times, but it depends on the metrics that we "query". 
+    **It will be important to answer the following questions:**
+        - **How can we detect that the application is run more than one time?**
+        - **Which combination of metrics allow the application to be run only one time?**
+        - **How and which metrics are enough to detect the GPU stress?**
+    - 03_activity_trace_async: Asynchronous means that while the application is running a separate thread that calls the CUPTI APIs is issued and it can trace the activities (activity is a broad term for several "contexts", see **chapter 3** for more details)
+    - 03_cupti_nvtx: It is performed asynchronously as well.
+    - 03_cupti_trace_injection: It is performed asynchronously as well.
+    - 04_cuda_graphs_trace: Maybe it doesn't matter because it is just for profiling.
 
 ## Checkpoint 2
 0. Check the whole current readme.md and change the name of the folders with the prefixes (numbers)
@@ -291,6 +295,7 @@ https://docs.nvidia.com/cupti/api/group__CUPTI__EVENT__API.html
 5. Go in the documentation at the following link and try to trace the activity as in **paragraph 3.2**
 https://docs.nvidia.com/cupti/api/group__CUPTI__ACTIVITY__API.html#_CPPv429CUpti_ActivityEnvironmentKind
 6. Prova a fare tutte queste prove su GPU_burn
+
 ### Notes
 Each function (activity or kernel) invocation is assigned a unique correlation ID that is identical to the correlation ID in the memcpy, memset, or kernel activity record that is associated with this function. 
 
