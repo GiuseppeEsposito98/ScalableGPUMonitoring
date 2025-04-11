@@ -5,4 +5,4 @@ CUPTI/
 gpu-burn/
 *.txt
 *.csv
-test-apps
+test-apps/
