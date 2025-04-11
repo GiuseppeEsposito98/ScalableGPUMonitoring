@@ -7,8 +7,8 @@ ifndef OS
 endif
 
 CUDA_INSTALL_PATH ?= /usr/local/cuda/
-NVCC := "$(CUDA_INSTALL_PATH)/bin/nvcc"
-INCLUDES := -I"$(CUDA_INSTALL_PATH)/include" -I$(CUDA_INSTALL_PATH)include -I../00_common
+NVCC := "$(CUDA_INSTALL_PATH)bin/nvcc"
+INCLUDES := -I"$(CUDA_INSTALL_PATH)include" -I$(CUDA_INSTALL_PATH)include -I../00_common
 
 ifeq ($(OS),Windows_NT)
     LIB_PATH ?= ..\..\lib64
@@ -30,8 +30,7 @@ else
         export LD_LIBRARY_PATH := $(LD_LIBRARY_PATH):$(LIB_PATH)
         LIBS = -L $(LIB_PATH) -lcuda -L $(EXTRAS_LIB_PATH) -lcupti -lpcsamplingutil
     endif
-    LIBNAMEPC := libpc_sampling_continuous.so
-    LIBNAMEPCTEMP := libpc_temp.so
+    LIBNAME := programma
     NVCCFLAGS += -Xcompiler -fPIC
 endif
 
@@ -56,10 +55,8 @@ ifneq ($(TARGET_ARCH), $(HOST_ARCH))
     endif
 endif
 
-all: pc_sampling_continuous pc_temperature
-pc_sampling_continuous: pc_sampling_continuous.cpp
-	$(NVCC) $(NVCC_COMPILER) $(NVCCFLAGS) $(INCLUDES) -o $(LIBNAMEPC) -shared $< $(LIBS)
-pc_temperature: pc_temperature.cpp
-	$(NVCC) $(NVCC_COMPILER) $(NVCCFLAGS) $(INCLUDES) -o $(LIBNAMEPCTEMP) -shared $< $(LIBS) -lnvidia-ml
+all: main
+main: main.cpp
+	$(NVCC) $(NVCC_COMPILER) $(NVCCFLAGS) $(INCLUDES) -o $(LIBNAME) $< $(LIBS) -lnvidia-ml
 clean:
-	rm $(LIBNAMEPC) $(LIBNAMEPCTEMP)
+	rm $(LIBNAME)

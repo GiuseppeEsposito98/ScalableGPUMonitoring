@@ -6,4 +6,9 @@ Activity buffer size = 8388608 bytes.
 Calling CUPTI API: cuptiEnableCallback(1, injectionGlobals.subscriberHandle, CUPTI_CB_DOMAIN_DRIVER_API, CUPTI_DRIVER_TRACE_CBID_cuProfilerStart)
 Calling CUPTI API: cuptiEnableCallback(1, injectionGlobals.subscriberHandle, CUPTI_CB_DOMAIN_DRIVER_API, CUPTI_DRIVER_TRACE_CBID_cuProfilerStop)
 Calling CUPTI API: cuptiEnableCallback(1, injectionGlobals.subscriberHandle, CUPTI_CB_DOMAIN_RUNTIME_API, CUPTI_RUNTIME_TRACE_CBID_cudaDeviceReset_v3020)
-Enabling CUPTI_ACTIVITY_KIND_ENVIRONMENT.
+Enabling CUPTI_ACTIVITY_KIND_MEMCPY.
+Enabling CUPTI_ACTIVITY_KIND_MEMSET.
+Enabling CUPTI_ACTIVITY_KIND_KERNEL.
+Enabling CUPTI_ACTIVITY_KIND_DRIVER.
+Enabling CUPTI_ACTIVITY_KIND_RUNTIME.
+Enabling CUPTI_ACTIVITY_KIND_CONCURRENT_KERNEL.

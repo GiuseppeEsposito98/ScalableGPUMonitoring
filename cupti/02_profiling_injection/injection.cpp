@@ -486,9 +486,9 @@ InitializeInjection()
         else
         {
             metricNames.push_back("sm__cycles_elapsed.avg");
-            metricNames.push_back("smsp__sass_thread_inst_executed_op_dadd_pred_on.avg");
-            metricNames.push_back("smsp__sass_thread_inst_executed_op_dfma_pred_on.avg");
-            metricNames.push_back("smsp__inst_executed_pipe_fp64.avg.pct_of_peak_sustained_active");
+            // metricNames.push_back("smsp__sass_thread_inst_executed_op_dadd_pred_on.avg");
+            // metricNames.push_back("smsp__sass_thread_inst_executed_op_dfma_pred_on.avg");
+            // metricNames.push_back("smsp__inst_executed_pipe_fp64.avg.pct_of_peak_sustained_active");
         }
 
         // Subscribe to some callbacks

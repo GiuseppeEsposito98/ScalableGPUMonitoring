@@ -31,7 +31,8 @@ else
         export LD_LIBRARY_PATH := $(LD_LIBRARY_PATH):$(LIB_PATH)
         LIBS = -L $(LIB_PATH) -lcuda -L $(EXTRAS_LIB_PATH) -lcupti
     endif
-    LIBNAME := libcupti_trace_injection.so
+    LIBNAME_INJECTION := libcupti_trace_injection.so
+    LIBNAME_ENVIRONMENT := libcupti_trace_environment.so
     NVCCFLAGS += -Xcompiler -fPIC
 endif
 
@@ -56,8 +57,10 @@ ifneq ($(TARGET_ARCH), $(HOST_ARCH))
     endif
 endif
 
-all: cupti_trace_injection
+all: cupti_trace_injection cupti_trace_environment
 cupti_trace_injection: cupti_trace_injection.cpp
-	$(NVCC) $(NVCC_COMPILER) $(NVCCFLAGS) $(INCLUDES) -o $(LIBNAME) -shared $< $(LIBS)
+	$(NVCC) $(NVCC_COMPILER) $(NVCCFLAGS) $(INCLUDES) -o $(LIBNAME_INJECTION) -shared $< $(LIBS)
+cupti_trace_environment: cupti_trace_environment.cpp
+	$(NVCC) $(NVCC_COMPILER) $(NVCCFLAGS) $(INCLUDES) -o $(LIBNAME_ENVIRONMENT) -shared $< $(LIBS)
 clean:
-	rm -f $(LIBNAME) cupti_trace_injection.o
+	rm -f $(LIBNAME_INJECTION) $(LIBNAME_ENVIRONMENT) cupti_trace_injection.o

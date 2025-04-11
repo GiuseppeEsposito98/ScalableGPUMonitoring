@@ -3,3 +3,6 @@ data_analysis/
 Monitoring/
 CUPTI/
 gpu-burn/
+out.txt
+log.txt
+test-apps
