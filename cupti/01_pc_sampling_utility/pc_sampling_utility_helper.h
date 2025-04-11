@@ -235,8 +235,8 @@ PrintRetrievedPcSampData()
  */
 static void
 RetrievePcSampData()
-{
-    std::ifstream fileHandler(fileName, std::ios::out | std::ios::binary);
+{   
+    std::ifstream fileHandler(fileName, std::ios::in | std::ios::binary);
 
     if (!fileHandler)
     {
@@ -263,7 +263,7 @@ RetrievePcSampData()
 
         CUPTI_UTIL_CALL(CuptiUtilGetBufferInfo(&getBufferInfoParams));
 
-        CUpti_PCSamplingData buffersRereivedData = {0};
+        CUpti_PCSamplingData buffersRereivedData = {0}; // il piano qui è estendere il tipo CUpti_PCSamplingData e aggiungerci l'informazione sulla temperatura e stamarla quando si stampa tutto il resto. 
         buffersRereivedData.pPcData = (CUpti_PCSamplingPCData *) calloc (getBufferInfoParams.bufferInfoData.recordCount, sizeof(CUpti_PCSamplingPCData));
         MEMORY_ALLOCATION_CALL(buffersRereivedData.pPcData);
         for (size_t j=0; j<getBufferInfoParams.bufferInfoData.recordCount; j++)
