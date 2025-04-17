@@ -1,4 +1,4 @@
-SAMPLING_MODE="Parallel"
+SAMPLING_MODE="Serialized"
 
 APP_NAME="backprop"
 cp data/raw/$SAMPLING_MODE/1_25_$APP_NAME.dat ../01_pc_sampling_utility/1_25_$APP_NAME.dat

@@ -13,6 +13,9 @@ export LD_LIBRARY_PATH="/home/bepi/Desktop/Ph.D_/projects/GPU_stress/code/Scalab
 export LD_LIBRARY_PATH="/home/bepi/Desktop/Ph.D_/projects/GPU_stress/code/ScalableGPUMonitoring/cupti/01_pc_sampling_continuous/":"/usr/local/cuda-12/lib64"
 ./libpc_sampling_continuous.pl --collection-mode 1 --sampling-period 5 --file-name 5kernels_srad_v2.dat --app "./test-apps/gpu-rodinia/bin/linux/cuda/srad_v2 2048 2048 50 60 50 60 0.2 5"
 
+# export LD_LIBRARY_PATH="/home/bepi/Desktop/Ph.D_/projects/GPU_stress/code/ScalableGPUMonitoring/cupti/01_pc_sampling_continuous/":"/usr/local/cuda-12/lib64"
+# ./libpc_sampling_continuous.pl --collection-mode 1 --sampling-period 30 --file-name 5kernels_gpuburn.dat --circular-buf-count 460 --hw-buf-size 1024 MB --app "./test-apps/gpu-burn/gpu_burn 60 -i 0 -c ./test-apps/gpu-burn/compare.ptx -m 50%"
+
 export PATH="/home/bepi/anaconda3/bin:$PATH"
 source /home/bepi/anaconda3/bin/activate
 conda deactivate 
@@ -26,6 +29,7 @@ mv 5kernels_gaussian.dat data/raw/Parallel/5_gaussian.dat
 mv 5kernels_sc_gpu.dat data/raw/Parallel/5_sc_gpu.dat
 mv 5kernels_srad_v2.dat data/raw/Parallel/5_srad_v2.dat
 mv 5kernels_lenet5.dat data/raw/Parallel/5_lenet5.dat
+mv 5kernels_gpuburn.dat data/raw/Parallel/5_gpuburn.dat
 
 
 

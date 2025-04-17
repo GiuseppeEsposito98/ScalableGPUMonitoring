@@ -5,11 +5,11 @@ main_directory="exe/bash/postprocessing"
 
 for folder in "$main_directory"/*; do
     if [ -d "$folder" ]; then
-        echo "I'm in folder: $folder"
+        echo "I'm in folder: $PWD"
         
         for file in "$folder"/*; do
             echo $file
-            if [ -f "$file" ] && [[ "$file" == *Parallel* ]]; then
+            if [ -f "$file" ]; then
                 echo "Executing: $file"
                 bash $file
             fi

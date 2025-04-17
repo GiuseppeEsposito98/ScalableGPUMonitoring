@@ -13,6 +13,9 @@ export LD_LIBRARY_PATH="/home/bepi/Desktop/Ph.D_/projects/GPU_stress/code/Scalab
 export LD_LIBRARY_PATH="/home/bepi/Desktop/Ph.D_/projects/GPU_stress/code/ScalableGPUMonitoring/cupti/01_pc_sampling_continuous/":"/usr/local/cuda-12/lib64"
 ./libpc_sampling_continuous.pl --collection-mode 1 --sampling-period 25 --file-name 25kernels_srad_v2.dat --app "./test-apps/gpu-rodinia/bin/linux/cuda/srad_v2 2048 2048 50 60 50 60 0.5 20"
 
+# export LD_LIBRARY_PATH="/home/bepi/Desktop/Ph.D_/projects/GPU_stress/code/ScalableGPUMonitoring/cupti/01_pc_sampling_continuous/":"/usr/local/cuda-12/lib64"
+# ./libpc_sampling_continuous.pl --collection-mode 1 --sampling-period 25 --file-name 25kernels_gpuburn.dat --app "./test-apps/gpu-burn/gpu_burn 60"
+
 export PATH="/home/bepi/anaconda3/bin:$PATH"
 source /home/bepi/anaconda3/bin/activate
 conda deactivate 
@@ -21,8 +24,9 @@ conda activate gpustress
 
 ./libpc_sampling_continuous.pl --collection-mode 1 --sampling-period 25 --file-name 25kernels_lenet5.dat --app "python3 /home/bepi/Desktop/Ph.D_/projects/GPU_stress/code/ScalableGPUMonitoring/cupti/01_pc_sampling_continuous/exe/LeNet5.py"
 
-mv 25kernels_backprop.dat data/raw/Parallel/25_backprop.dat
-mv 25kernels_gaussian.dat data/raw/Parallel/25_gaussian.dat
-mv 25kernels_sc_gpu.dat data/raw/Parallel/25_sc_gpu.dat
-mv 25kernels_srad_v2.dat data/raw/Parallel/25_srad_v2.dat
-mv 25kernels_lenet5.dat data/raw/Parallel/25_lenet5.dat
+mv 1_25kernels_backprop.dat data/raw/Parallel/1_25_backprop.dat
+mv 1_25kernels_gaussian.dat data/raw/Parallel/1_25_gaussian.dat
+mv 1_25kernels_sc_gpu.dat data/raw/Parallel/1_25_sc_gpu.dat
+mv 1_25kernels_srad_v2.dat data/raw/Parallel/1_25_srad_v2.dat
+mv 1_25kernels_lenet5.dat data/raw/Parallel/1_25_lenet5.dat
+# mv 25kernels_gpuburn.dat data/raw/Parallel/25_gpuburn.dat

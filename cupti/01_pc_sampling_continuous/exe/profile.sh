@@ -9,9 +9,9 @@ for folder in "$main_directory"/*; do
         
         for file in "$folder"/*; do
             echo $file
-            if [ -f "$file" ] && [[ "$file" == *Serialized* ]]; then
+            if [ -f "$file" ]; then
                 echo "Executing: $file"
-                sudo bash $file
+                bash $file
             fi
         done
     fi

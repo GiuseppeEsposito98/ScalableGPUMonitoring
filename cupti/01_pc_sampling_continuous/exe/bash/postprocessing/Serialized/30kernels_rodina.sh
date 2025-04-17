@@ -1,4 +1,4 @@
-SAMPLING_MODE="Parallel"
+SAMPLING_MODE="Serialized"
 
 APP_NAME="backprop"
 cp data/raw/$SAMPLING_MODE/1_30_$APP_NAME.dat ../01_pc_sampling_utility/1_30_$APP_NAME.dat
@@ -12,10 +12,10 @@ APP_NAME="gaussian"
 cd ../01_pc_sampling_continuous
 cp data/raw/$SAMPLING_MODE/1_30_$APP_NAME.dat ../01_pc_sampling_utility/1_30_$APP_NAME.dat
 cd ../01_pc_sampling_utility
-./pc_sampling_utility --file-name 1_30_$APP_NAME.dat > 1_30_$APP_NAME.txt
+./pc_sampling_utility --file-name 1_30_$APP_NAME.dat > 1_30_$APP_NAME.Serialized
 python3 parse_data.py --file_name "1_30_$APP_NAME" --sampling_mode "$SAMPLING_MODE"
 rm ../01_pc_sampling_utility/1_30_$APP_NAME.dat
-rm ../01_pc_sampling_utility/1_30_$APP_NAME.txt
+rm ../01_pc_sampling_utility/1_30_$APP_NAME.Serialized
 
 APP_NAME="lenet5"
 cd ../01_pc_sampling_continuous

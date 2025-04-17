@@ -1,0 +1,1 @@
+python3 exe/gpu_telemetry_querying.py
