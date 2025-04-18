@@ -5,16 +5,19 @@ import argparse
 def get_argparser():
     parser = argparse.ArgumentParser(description='Postprocessing for .txt data')
     parser.add_argument('--file_name', required=True, help='Input file name (without extension)')
+    parser.add_argument('--performance', required=True, help='Either Performance Metrics (PM) or Performance Counters (PC)')
     return parser
 
 def main(args):
     # Legge il contenuto del file
-    with open(f'data/raw/{args.file_name}.txt', 'r') as file:
+    with open(f'data/raw/{args.performance}/{args.file_name}.txt', 'r') as file:
         content = file.read()
 
     # Regex per trovare le sessioni
-    session_pattern = re.compile(r"Context .*?session (\d+):\s*(.*?)\s*(?=Context|Training done|$)", re.DOTALL)
-    
+    session_pattern = re.compile(
+        r"Context .*?session (\d+):(?:\s*\[durata:\s*(\d+)\s*ms\])?:\s*(.*?)\s*(?=Context|Training done|$)",
+        re.DOTALL
+    )
     # Regex per una metrica: range, metrica, valore
     metric_pattern = re.compile(r"^\s*(\d+)\s+([a-zA-Z0-9_\.]+)\s+([\deE\+\-\.]+)\s*$", re.MULTILINE)
 
@@ -24,7 +27,8 @@ def main(args):
     # Processa tutte le sessioni
     for session_match in session_pattern.finditer(content):
         session_id = session_match.group(1)
-        session_block = session_match.group(2)
+        duration = session_match.group(2)
+        session_block = session_match.group(3)
 
         for metric_match in metric_pattern.finditer(session_block):
             range_name = metric_match.group(1)
@@ -39,6 +43,7 @@ def main(args):
             # Aggiungi al dataset
             new_row = pd.DataFrame({
                 'session_id': session_id,
+                'duration_ms': int(duration) if duration else None,
                 'location': location,
                 'metric_name': name,
                 'rollup_operation': rollup,
@@ -49,7 +54,7 @@ def main(args):
             df = pd.concat([df, new_row], ignore_index=True)
 
     # Salva il CSV
-    df.to_csv(f'data/postprocessed/{args.file_name}.csv', index=False)
+    df.to_csv(f'data/postprocessed/{args.performance}/{args.file_name}.csv', index=False)
 
     print("Metrics have been processed and saved.")
 

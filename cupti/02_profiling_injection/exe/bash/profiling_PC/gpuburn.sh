@@ -1,4 +1,3 @@
-
 export INJECTION_KERNEL_COUNT=$1
 
 export INJECTION_METRICS="sm__cycles_active.sum "
@@ -24,4 +23,4 @@ export INJECTION_METRICS=$INJECTION_METRICS"smsp__inst_executed_op_local_ld.sum 
 export INJECTION_METRICS=$INJECTION_METRICS"smsp__inst_executed_op_global_st.sum "
 export INJECTION_METRICS=$INJECTION_METRICS"smsp__inst_executed_op_global_ld.sum"
 
-env CUDA_INJECTION64_PATH=./libinjection.so ./test-apps/gpu-rodinia/bin/linux/cuda/backprop 65536 > data/raw/backprop_$INJECTION_KERNEL_COUNT.txt
+env CUDA_INJECTION64_PATH=./libinjection.so ./test-apps/gpu-burn/gpu_burn -i 0 -c ./test-apps/gpu-burn/compare.ptx -m 50% > data/raw/PC/gpuburnprova_$INJECTION_KERNEL_COUNT.txt 60

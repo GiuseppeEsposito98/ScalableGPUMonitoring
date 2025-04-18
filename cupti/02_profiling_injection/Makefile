@@ -96,7 +96,7 @@ simple_target: simple_target.cu
 complex_target: complex_target.cu
 	$(NVCC) $(NVCC_COMPILER) $(NVCCFLAGS) -o $@ $^ $(INCLUDES) -lcuda $(GENCODE_FLAGS)
 
-libinjection.so: injection.cpp
+libinjection.so: injection_time.cpp
 	$(NVCC) $(NVCC_COMPILER) $(NVCCFLAGS) -o $@ $< $(INCLUDES) $(LIBS) -Ldl -Xcompiler -fPIC --shared
 
 .PHONY: clean

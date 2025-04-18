@@ -23,4 +23,10 @@ export INJECTION_METRICS=$INJECTION_METRICS"smsp__inst_executed_op_local_ld.sum 
 export INJECTION_METRICS=$INJECTION_METRICS"smsp__inst_executed_op_global_st.sum "
 export INJECTION_METRICS=$INJECTION_METRICS"smsp__inst_executed_op_global_ld.sum"
 
-env CUDA_INJECTION64_PATH=./libinjection.so ./test-apps/gpu-burn/gpu_burn 10 -i 0 -c ./test-apps/gpu-burn/compare.ptx -m 50% > data/raw/gpuburn_$INJECTION_KERNEL_COUNT.txt
+export PATH="/home/bepi/anaconda3/bin:$PATH"
+source /home/bepi/anaconda3/bin/activate
+conda deactivate 
+
+conda activate gpustress
+
+env CUDA_INJECTION64_PATH=./libinjection.so python3 /home/bepi/Desktop/Ph.D_/projects/GPU_stress/code/ScalableGPUMonitoring/cupti/01_pc_sampling_continuous/exe/LeNet5.py > data/raw/PC/lenet_$INJECTION_KERNEL_COUNT.txt

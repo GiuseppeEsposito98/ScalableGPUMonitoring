@@ -24,4 +24,4 @@ export INJECTION_METRICS=$INJECTION_METRICS"smsp__inst_executed_op_local_ld.sum 
 export INJECTION_METRICS=$INJECTION_METRICS"smsp__inst_executed_op_global_st.sum "
 export INJECTION_METRICS=$INJECTION_METRICS"smsp__inst_executed_op_global_ld.sum"
 
-env CUDA_INJECTION64_PATH=./libinjection.so ./test-apps/gpu-rodinia/bin/linux/cuda/gaussian -f ./test-apps/gpu-rodinia/gaussian/matrix1024.txt > data/raw/gaussian_$INJECTION_KERNEL_COUNT.txt
+env CUDA_INJECTION64_PATH=./libinjection.so ./test-apps/gpu-rodinia/bin/linux/cuda/gaussian -f ./test-apps/gpu-rodinia/gaussian/matrix1024.txt > data/raw/PC/gaussian_$INJECTION_KERNEL_COUNT.txt

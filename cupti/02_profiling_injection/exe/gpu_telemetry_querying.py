@@ -83,6 +83,7 @@ def sample_telemetry(device):
 def get_argparser():
     parser = argparse.ArgumentParser(description='Postprocessing for .txt data')
     parser.add_argument('--file_name', required=True, help='Input file name')
+    parser.add_argument('--performance', required=True, help='Either Performance Metrics (PM) or Performance Counters (PC)')
     return parser
 
 def main(args):
@@ -91,7 +92,7 @@ def main(args):
     device = nvmlDeviceGetHandleByIndex(0)  # GPU 0
 
     # Nome file
-    csv_file = f"data/postprocessed/{args.file_name}_telemetry.csv"
+    csv_file = f"data/postprocessed/{args.performance}/{args.file_name}_telemetry.csv"
 
     # Header CSV
     header = [

@@ -1,3 +1,4 @@
+
 export INJECTION_KERNEL_COUNT=$1
 
 export INJECTION_METRICS="sm__cycles_active.sum "
@@ -23,10 +24,4 @@ export INJECTION_METRICS=$INJECTION_METRICS"smsp__inst_executed_op_local_ld.sum 
 export INJECTION_METRICS=$INJECTION_METRICS"smsp__inst_executed_op_global_st.sum "
 export INJECTION_METRICS=$INJECTION_METRICS"smsp__inst_executed_op_global_ld.sum"
 
-export PATH="/home/bepi/anaconda3/bin:$PATH"
-source /home/bepi/anaconda3/bin/activate
-conda deactivate 
-
-conda activate gpustress
-
-env CUDA_INJECTION64_PATH=./libinjection.so python3 /home/bepi/Desktop/Ph.D_/projects/GPU_stress/code/ScalableGPUMonitoring/cupti/01_pc_sampling_continuous/exe/LeNet5.py > data/raw/lenet_$INJECTION_KERNEL_COUNT.txt
+env CUDA_INJECTION64_PATH=./libinjection.so ./test-apps/gpu-rodinia/bin/linux/cuda/srad_v2 2048 2048 50 60 50 60 0.5 20 > data/raw/PC/srad_$INJECTION_KERNEL_COUNT.txt
