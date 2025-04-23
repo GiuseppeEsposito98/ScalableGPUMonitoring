@@ -272,9 +272,10 @@ PrintData(
     if (contextData.endTime > contextData.startTime) {
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(
                             contextData.endTime - contextData.startTime).count();
-        cout << " [durata: " << duration << " ms]";
+    } else {
+        auto duration=-1
     }
-
+    cout << " [durata: " << duration << " ms]";
     cout << ":" << endl;
 
     PrintMetricValues(contextData.deviceProp.name, contextData.counterDataImage, metricNames, contextData.counterAvailabilityImage.data());

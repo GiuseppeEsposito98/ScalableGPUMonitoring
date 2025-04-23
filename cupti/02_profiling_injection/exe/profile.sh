@@ -11,7 +11,7 @@ conda deactivate
 
 conda activate gpustress
 
-kernels=(1 10 20 30 50 80 100)
+kernels=(3 5 7 15)
 
 for kernel in "${kernels[@]}"; do
     for file in "$main_directory"/*; do
@@ -24,7 +24,7 @@ for kernel in "${kernels[@]}"; do
             IFS='/' read -ra parts <<< "$file"
 
             IFS='.' read -ra parts1 <<< "${parts[3]}"
-
+            date +"%c"
             python3 exe/gpu_telemetry_querying.py --file_name ${parts1[0]}$inter$kernel --performance $PERFORMANCE &
             PID_CONTROLLER=$!
 
