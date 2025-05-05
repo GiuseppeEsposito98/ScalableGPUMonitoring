@@ -1,6 +1,6 @@
 import csv
 import time
-import datetime
+from datetime import datetime
 from pynvml import *
 import argparse
 from pynvml import (
@@ -13,7 +13,7 @@ from pynvml import (
 
 def sample_telemetry(device):
     timestamp = time.perf_counter_ns() #
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S') # to get the system time
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
     name = nvmlDeviceGetName(device)
     temp = nvmlDeviceGetTemperature(device, NVML_TEMPERATURE_GPU)
     util = nvmlDeviceGetUtilizationRates(device)

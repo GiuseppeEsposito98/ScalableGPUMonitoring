@@ -29,6 +29,8 @@ using ::std::cout;
 using ::std::endl;
 
 #include <chrono>
+#include <ctime>
+#include <cstdio>
 using Clock = std::chrono::high_resolution_clock;
 using TimePoint = std::chrono::time_point<Clock>;
 
@@ -269,13 +271,29 @@ PrintData(
 {
     cout << endl << "Context " << contextData.ctx << ", device " << contextData.deviceId << " (" << contextData.deviceProp.name << ") session " << contextData.iterations << ":" << endl;
 
-    if (contextData.endTime > contextData.startTime) {
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(
-                            contextData.endTime - contextData.startTime).count();
-    } else {
-        auto duration=-1
-    }
-    cout << " [durata: " << duration << " ms]";
+    
+    auto now = std::chrono::system_clock::now();
+    auto duration = now.time_since_epoch();
+    auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
+
+    std::time_t now_c = static_cast<std::time_t>(seconds);
+    std::tm* local_tm = std::localtime(&now_c);
+
+    int ms_part = static_cast<int>(millis % 1000);
+
+    char buffer[64];
+    std::snprintf(buffer, sizeof(buffer),
+                  "%04d-%02d-%02d %02d:%02d:%02d.%03d",
+                  local_tm->tm_year + 1900,
+                  local_tm->tm_mon + 1,
+                  local_tm->tm_mday,
+                  local_tm->tm_hour,
+                  local_tm->tm_min,
+                  local_tm->tm_sec,
+                  ms_part);
+
+    cout << " [durata: " << std::string(buffer) << " ms]";
     cout << ":" << endl;
 
     PrintMetricValues(contextData.deviceProp.name, contextData.counterDataImage, metricNames, contextData.counterAvailabilityImage.data());

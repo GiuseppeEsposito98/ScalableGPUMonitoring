@@ -8,5 +8,5 @@ conda deactivate
 
 conda activate gpustress
 
-APP_NAME='lenet'
+APP_NAME='NN50PercLeNet5'
 python3 exe/parse_data.py --file_name "$APP_NAME$inter$INJECTION_KERNEL_COUNT" --performance $PERFORMANCE

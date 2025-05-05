@@ -15,8 +15,8 @@ def main(args):
 
     # Regex per trovare le sessioni
     session_pattern = re.compile(
-    r"Context .*?session (\d+):\s*(?:\[\s*durata:\s*(\d+)\s*ms\s*\])?\s*:\s*\n+(.*?)(?=\nContext|\Z)",
-    re.DOTALL
+        r"Context .*?session (\d+):\s*\[\s*durata:\s*([\d\-:\. ]+)\s*ms\s*\]:\s*\n+(.*?)(?=\nContext|\Z)",
+        re.DOTALL
     )
     # Regex per una metrica: range, metrica, valore
     metric_pattern = re.compile(r"^\s*(\d+)\s+([a-zA-Z0-9_\.]+)\s+([\deE\+\-\.]+)\s*$", re.MULTILINE)
@@ -43,7 +43,7 @@ def main(args):
             # Aggiungi al dataset
             new_row = pd.DataFrame({
                 'session_id': session_id,
-                'duration_ms': int(duration) if duration else None,
+                'duration_ms': duration if duration else None,
                 'location': location,
                 'metric_name': name,
                 'rollup_operation': rollup,

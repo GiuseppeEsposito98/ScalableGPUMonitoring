@@ -11,12 +11,13 @@ conda deactivate
 
 conda activate gpustress
 
-kernels=(3 5 7 15)
+kernels=(1)
 
 for kernel in "${kernels[@]}"; do
     for file in "$main_directory"/*; do
-        # if [[ -f "$file" && "$file" == *"gpuburn"* ]]; then
-        if [[ -f "$file" ]]; then
+        if [[ "$file" == *"resnet"* || "$file" == *"lenet"* || "$file" == *"mnasnet"* ]]; then
+        # if [[ "$file" == *"gpuburn5min"* ]]; then
+        # if [[ -f "$file" ]]; then
 
             echo "Executing telemetry controller in parallel"
             echo $file
@@ -25,6 +26,7 @@ for kernel in "${kernels[@]}"; do
 
             IFS='.' read -ra parts1 <<< "${parts[3]}"
             date +"%c"
+            
             python3 exe/gpu_telemetry_querying.py --file_name ${parts1[0]}$inter$kernel --performance $PERFORMANCE &
             PID_CONTROLLER=$!
 
@@ -36,6 +38,7 @@ for kernel in "${kernels[@]}"; do
             wait "$PID_CONTROLLER" 2>/dev/null
 
             echo "End run"
+            sleep 1800
 
         fi
     done

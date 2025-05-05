@@ -19,4 +19,12 @@ conda deactivate
 
 conda activate gpustress
 
-env CUDA_INJECTION64_PATH=./libinjection.so python3 /home/bepi/Desktop/Ph.D_/projects/GPU_stress/code/ScalableGPUMonitoring/cupti/01_pc_sampling_continuous/exe/LeNet5.py > data/raw/PM/lenet_$INJECTION_KERNEL_COUNT.txt
+echo "mnasnet0_5"
+# this inferences should occupy 90% of the memory with an epsilon of 189.75 MB for 1 hour
+env CUDA_INJECTION64_PATH=./libinjection.so python3 /home/bepi/Desktop/Ph.D_/projects/GPU_stress/code/ScalableGPUMonitoring/cupti/02_profiling_injection/test-apps/NNs/evaluate.py\
+    --model_name mnasnet0_5 \
+    --dataset_name CIFAR10 \
+    --batch_size 10000 \
+    --num_iterations 100 \
+    --duration 350 > data/raw/PM/NN50Percmnasnet05_$INJECTION_KERNEL_COUNT.txt
+    
