@@ -1,10 +1,11 @@
+
 export INJECTION_KERNEL_COUNT=$1
 
 export INJECTION_METRICS="idc__request_cycles_active.avg "
 export INJECTION_METRICS=$INJECTION_METRICS"sm__inst_executed.avg "
 export INJECTION_METRICS=$INJECTION_METRICS"sm__inst_executed_pipe_adu.avg "
 export INJECTION_METRICS=$INJECTION_METRICS"sm__inst_executed_pipe_cbu_pred_on_any.avg "
-export INJECTION_METRICS=$INJECTION_METRICS"sm__inst_executed_pipe_fp16.avg "
+# export INJECTION_METRICS=$INJECTION_METRICS"sm__inst_executed_pipe_fp16.avg "
 export INJECTION_METRICS=$INJECTION_METRICS"sm__inst_executed_pipe_ipa.avg "
 export INJECTION_METRICS=$INJECTION_METRICS"sm__inst_executed_pipe_lsu.avg "
 export INJECTION_METRICS=$INJECTION_METRICS"sm__inst_executed_pipe_tex.avg "
@@ -17,8 +18,9 @@ export INJECTION_METRICS=$INJECTION_METRICS"sm__mio_pq_read_cycles_active.avg "
 export INJECTION_METRICS=$INJECTION_METRICS"sm__mio_pq_write_cycles_active.avg "
 export INJECTION_METRICS=$INJECTION_METRICS"sm__pipe_alu_cycles_active.avg "
 export INJECTION_METRICS=$INJECTION_METRICS"sm__pipe_fp64_cycles_active.avg "
-export INJECTION_METRICS=$INJECTION_METRICS"sm__pipe_fma_cycles_active.avg "
-export INJECTION_METRICS=$INJECTION_METRICS"sm__pipe_shared_cycles_active.avg "
+# export INJECTION_METRICS=$INJECTION_METRICS"sm__pipe_fma_cycles_active.avg "
+# export INJECTION_METRICS=$INJECTION_METRICS"sm__pipe_shared_cycles_active.avg "
 export INJECTION_METRICS=$INJECTION_METRICS"sm__pipe_tensor_cycles_active.avg "
+export INJECTION_METRICS=$INJECTION_METRICS"sm__throughput.avg "
 
-env CUDA_INJECTION64_PATH=./libinjection.so ./test-apps/gpu-burn/gpu_burn -i 0 -c ./test-apps/gpu-burn/compare.ptx -m 50% > data/raw/PM/gpuburn5min_$INJECTION_KERNEL_COUNT.txt 300
+env CUDA_INJECTION64_PATH=./libinjection.so ./test-apps/gpu-rodinia/bin/linux/cuda/srad_v2 2048 2048 50 60 50 60 0.5 20 > data/raw/SMThroughput/srad_$INJECTION_KERNEL_COUNT.txt

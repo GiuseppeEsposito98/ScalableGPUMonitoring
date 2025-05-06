@@ -22,4 +22,4 @@ export INJECTION_METRICS=$INJECTION_METRICS"sm__pipe_fma_cycles_active.avg "
 export INJECTION_METRICS=$INJECTION_METRICS"sm__pipe_shared_cycles_active.avg "
 export INJECTION_METRICS=$INJECTION_METRICS"sm__pipe_tensor_cycles_active.avg "
 
-env CUDA_INJECTION64_PATH=./libinjection.so ./test-apps/gpu-rodinia/bin/linux/cuda/srad_v2 2048 2048 50 60 50 60 0.5 20 > data/raw/PM/srad_$INJECTION_KERNEL_COUNT.txt
+env CUDA_INJECTION64_PATH=./libinjection.so ./test-apps/gpu-rodinia/bin/linux/cuda/gaussian -f ./test-apps/gpu-rodinia/gaussian/matrix1024.txt > data/raw/SMThroughput/gaussian_$INJECTION_KERNEL_COUNT.txt

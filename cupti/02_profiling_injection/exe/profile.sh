@@ -15,9 +15,8 @@ kernels=(1)
 
 for kernel in "${kernels[@]}"; do
     for file in "$main_directory"/*; do
-        if [[ "$file" == *"resnet"* || "$file" == *"lenet"* || "$file" == *"mnasnet"* ]]; then
+        if [[ "$file" == *"resnet"* || "$file" == *"lenet"* || "$file" == *"mnasnet"* || "$file" == *"gpuburn5min"* ]]; then
         # if [[ "$file" == *"gpuburn5min"* ]]; then
-        # if [[ -f "$file" ]]; then
 
             echo "Executing telemetry controller in parallel"
             echo $file

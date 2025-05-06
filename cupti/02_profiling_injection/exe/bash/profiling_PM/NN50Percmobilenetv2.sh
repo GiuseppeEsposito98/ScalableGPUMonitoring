@@ -19,8 +19,6 @@ conda deactivate
 
 conda activate gpustress
 
-
-
 echo "mobilenet_v2"
 # this inferences should occupy 90% of the memory with an epsilon of 1365.5 MB for 1 hour
 env CUDA_INJECTION64_PATH=./libinjection.so python3 /home/bepi/Desktop/Ph.D_/projects/GPU_stress/code/ScalableGPUMonitoring/cupti/02_profiling_injection/test-apps/NNs/evaluate.py\
