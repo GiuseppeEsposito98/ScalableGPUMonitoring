@@ -1,5 +1,6 @@
 import csv
 import time
+import os
 from datetime import datetime
 from pynvml import *
 import argparse
@@ -89,12 +90,15 @@ def get_argparser():
     return parser
 
 def main(args):
+
+    # Nome file
+    csv_file = f"data/postprocessed/{args.performance}/{args.file_name}_telemetry.csv"
+
     # Inizializza NVML
     nvmlInit()
     device = nvmlDeviceGetHandleByIndex(0)  # GPU 0
 
-    # Nome file
-    csv_file = f"data/postprocessed/{args.performance}/{args.file_name}_telemetry.csv"
+    
 
     # Header CSV
     header = [
