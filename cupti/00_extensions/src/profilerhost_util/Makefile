@@ -1,7 +1,7 @@
 #
 # Copyright 2011-2018 NVIDIA Corporation. All rights reserved
 #
-INCLUDES = -I../../../../include -I../../../../../../include -I../../include/profilerhost_util -I../../include/c_util
+INCLUDES = -I/usr/local/cuda/extras/CUPTI/include -I/usr/local/cuda/include -I../../include/profilerhost_util -I../../include/c_util
 
 ifndef OS
  OS   := $(shell uname)
@@ -18,16 +18,16 @@ ifeq ($(OS), Windows_NT)
     LIB_PATH ?= ..\..\lib64
 else
     ifneq ($(TARGET_ARCH), $(HOST_ARCH))
-        LIB_PATH ?= ../../../../../../targets/$(TARGET_ARCH)-$(TARGET_OS)/lib
+        LIB_PATH ?= /usr/local/cuda/targets/$(TARGET_ARCH)-$(TARGET_OS)/lib
         TARGET_CUDALIB_STUB_PATH = -L $(LIB_PATH)/stubs
     else
-        EXTRAS_LIB_PATH := ../../../../lib64
-        LIB_PATH ?= ../../../../../../lib64
+        EXTRAS_LIB_PATH := /usr/local/cuda/extras/CUPTI/lib64
+        LIB_PATH ?= /usr/local/cuda/lib64
     endif
 endif
 
 ifeq ($(OS), Windows_NT)
-    export PATH := $(PATH):../../../../lib/x64
+    export PATH := $(PATH):/usr/local/cuda/extras/CUPTI/lib/x64
     LIBS = -lcuda -L $(LIB_PATH) -lnvperf_host -lnvperf_target
     OBJ = obj
     LIBEXT = lib
@@ -39,13 +39,13 @@ else
     endif
     ifeq ($(OS), Darwin)
         export DYLD_LIBRARY_PATH := $(DYLD_LIBRARY_PATH):../../lib/x64
-        LIBS = -Xlinker -framework -Xlinker cuda -L ../../../../lib/x64 -lnvperf_host -lnvperf_target
+        LIBS = -Xlinker -framework -Xlinker cuda -L /usr/local/cuda/extras/CUPTI/lib/x64 -lnvperf_host -lnvperf_target
     else
         LIBS :=
         ifeq ($(HOST_ARCH), $(TARGET_ARCH))
             export LD_LIBRARY_PATH := $(LD_LIBRARY_PATH):../../lib/x64
             ifneq ($(TARGET_ARCH), x86_64)
-                EXTRAS_LIB_PATH := ../../../../lib64
+                EXTRAS_LIB_PATH := /usr/local/cuda/extras/CUPTI/lib64
                 LIBS = -L $(EXTRAS_LIB_PATH)
             endif
         endif
