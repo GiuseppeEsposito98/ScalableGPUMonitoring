@@ -31,6 +31,7 @@ def main(args):
         session_block = session_match.group(3)
 
         for metric_match in metric_pattern.finditer(session_block):
+            post = 'No post'
             range_name = metric_match.group(1)
             metric_name = metric_match.group(2)
             metric_value = metric_match.group(3)
@@ -39,6 +40,10 @@ def main(args):
             location = metric_name.split('__')[0]
             name = metric_name.split('__')[1].split('.')[0]
             rollup = metric_name.split('__')[1].split('.')[1]
+            try:
+                post = metric_name.split('__')[1].split('.')[2]
+            except:
+                print(f'No futher post processing')
 
             # Aggiungi al dataset
             new_row = pd.DataFrame({
@@ -47,6 +52,7 @@ def main(args):
                 'location': location,
                 'metric_name': name,
                 'rollup_operation': rollup,
+                'Post': post,
                 'range_name': range_name,
                 'metric_value': metric_value
             }, index=[0])

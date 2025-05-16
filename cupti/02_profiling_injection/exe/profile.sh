@@ -1,4 +1,5 @@
 #!/bin/bash
+# InstructionStats, ComputeWorkloadAnalysis, LaunchStats, Occupancy, Memory
 PERFORMANCE=$1
 
 main_directory="exe/bash/profiling_$PERFORMANCE"
