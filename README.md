@@ -1,5 +1,5 @@
 # ScalableGPUMonitoring
-This repo serves as a tool for simultaneously monitoring the behavior of an application for the stress induced by the device self-heating. 
+This repo serves as a tool for simultaneously monitoring the behavior of an application for the stress induced by the device self-heating. To do so, we combine internal events measurements with operative telemetry to effectively measure the stress induced by different parallel workloads on GPUs. The proposed solution combines workload profiling with the online monitoring of system telemetry parameters. In particular, the profiling analysis describes the use of GPU resources by evaluating internal hardware events through the integrated and accessible Performance Counters (PCs) in a GPU. Moreover, the telemetry parameters provide the thermal, power, and clock frequency variables, resulting from executing parallel workloads that serve for monitoring the hardware internal state.
 
 ## Prerequisites
 At the current repo status, this tool supports only versions of cuda 12.x
