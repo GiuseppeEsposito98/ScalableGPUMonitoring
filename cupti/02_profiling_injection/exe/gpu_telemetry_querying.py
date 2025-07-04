@@ -24,6 +24,21 @@ def sample_telemetry(device):
     clock_gr = nvmlDeviceGetClockInfo(device, NVML_CLOCK_GRAPHICS)
 
     try:
+        total_energy = nvmlDeviceGetTotalEnergyConsumption(device)
+    except NVMLError:
+        total_energy = -1
+    
+    try:
+        clock_freq = nvmlDeviceGetAdaptiveClockInfoStatus(device)
+    except NVMLError:
+        clock_freq = -1
+
+    try:
+        adaptive_clock_freq = nvmlDeviceGetCurrentClockFreqs(device)
+    except NVMLError:
+        adaptive_clock_freq = -1
+
+    try:
         fan = nvmlDeviceGetFanSpeed(device)
     except NVMLError:
         fan = -1
@@ -80,7 +95,10 @@ def sample_telemetry(device):
         ecc_vol_corr,
         ecc_vol_uncorr,
         ecc_agg_corr,
-        ecc_agg_uncorr
+        ecc_agg_uncorr,
+        total_energy,
+        clock_freq,
+        adaptive_clock_freq
     ]
 
 def get_argparser():
@@ -107,7 +125,8 @@ def main(args):
         "mem_total_MB", "mem_used_MB", "mem_free_MB",
         "clock_sm_MHz", "clock_mem_MHz", "clock_graphics_MHz",
         "fan_speed_percent", "power_draw_W", "ecc_volatile_corrected", 
-        "ecc_volatile_uncorrected", "ecc_aggregate_corrected", "ecc_aggregate_uncorrected"
+        "ecc_volatile_uncorrected", "ecc_aggregate_corrected", "ecc_aggregate_uncorrected",
+        "total_energy_mJ", 'clock_freq', 'adaptive_clock_frequency'
     ]
 
     # Sampling period (in nanosecondi)
