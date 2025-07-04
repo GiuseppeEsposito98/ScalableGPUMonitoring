@@ -3,7 +3,6 @@ data_analysis/
 Monitoring/
 CUPTI/
 gpu-burn/
-*.txt
 *.csv
 *.dat
 test-apps/
