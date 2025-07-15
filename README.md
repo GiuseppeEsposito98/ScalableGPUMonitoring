@@ -98,8 +98,8 @@ bash exe/complete_stress_profile.sh
 This command will execute the target applications for 5 minutes each waiting for the device cooldown for 30 minutes simultaneously monitoring Performance Counters data through CUPTI and telemetry monitoring through NVML. 
 3. If everything runs correctly, you will see some txt files in cupti/02_profiling_injection/data/raw/stress (Performance counters data) and a corresponding number of csv files in cupti/02_profiling_injection/data/postprocessed/stress (telemetry data)
 ```bash
-ls data/raw/stress
-ls data/postprocessed/stress
+ls data/raw/stress2
+ls data/postprocessed/stress2
 ```
 4. And eventually a json file reporting the values of the metrics of interest
 ```bash
