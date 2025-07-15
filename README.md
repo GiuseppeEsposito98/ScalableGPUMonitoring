@@ -58,7 +58,9 @@ cd test-apps
 
 9. Please refer to the intallation guide available in [GPU-burn](https://github.com/wilicc/gpu-burn) for proceeding with it installation
 
-## Framework usage
+# Framework usage
+
+## How to test all the applications monitoring different parameters
 
 1. You will need to lunch the experiments from the 02_profiling_injection folder
 ```bash
@@ -83,3 +85,23 @@ bash exe/postprocess.sh stress
 ls data/postprocessed/stress
 ```
 6. The notebooks available in cupti/02_profiling_injection/analysis allow to explore all the analysis performed on the available data. 
+
+## How to profile a target application from the stress perspective
+1. You will need to lunch the experiments from the 02_profiling_injection folder
+```bash
+cd ~/ScalableGPUMonitoring/cupti/02_profiling_injection
+```
+2. The bash file available at bash/profile.sh gives the possibility to analyze the performance of a specific application from the stress perspective through CUPTI (for performance counters) and NVML (for telemetry data). This will generate a complete report comprising all the metrics of interest for each tested application
+```bash
+bash exe/complete_stress_profile.sh
+```
+This command will execute the target applications for 5 minutes each waiting for the device cooldown for 30 minutes simultaneously monitoring Performance Counters data through CUPTI and telemetry monitoring through NVML. 
+3. If everything runs correctly, you will see some txt files in cupti/02_profiling_injection/data/raw/stress (Performance counters data) and a corresponding number of csv files in cupti/02_profiling_injection/data/postprocessed/stress (telemetry data)
+```bash
+ls data/raw/stress
+ls data/postprocessed/stress
+```
+4. And eventually a json file reporting the values of the metrics of interest
+```bash
+cat cupti/02_profiling_injection/data/postprocessed/stress/evaluation.json
+```
