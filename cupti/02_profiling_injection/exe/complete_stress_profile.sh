@@ -1,13 +1,15 @@
 #!/bin/bash
 # InstructionStats, ComputeWorkloadAnalysis, LaunchStats, Occupancy, Memory
+APP=$1
+
 PERFORMANCE="stress2"
 
 main_directory="exe/bash/profiling_$PERFORMANCE"
 inter='_'
 # cd $main_directory
 
-export PATH="/home/bepi/anaconda3/bin:$PATH"
-source /home/bepi/anaconda3/bin/activate
+export PATH="~/anaconda3/bin:$PATH"
+source ~/anaconda3/bin/activate
 conda deactivate 
 
 conda activate gpustress
@@ -18,7 +20,7 @@ kernels=(1)
 for kernel in "${kernels[@]}"; do
     for file in "$main_directory"/*; do
         # if ![[ "$file" == *"resnet"* || "$file" == *"lenet"* || "$file" == *"mnasnet"* || "$file" == *"gpuburn5min"* ]]; then
-            # if [[ "$file" == *"gpuburn5min"* ]]; then
+            if [[ "$file" == *${APP}* ]]; then
 
             echo "Executing telemetry controller in parallel"
             echo $file
@@ -40,7 +42,7 @@ for kernel in "${kernels[@]}"; do
 
             echo "End run"
             sleep 1800
-        # fi
+        fi
     done
 done
 
@@ -54,9 +56,10 @@ for kernel in "${kernels[@]}"; do
     for file in "$main_directory"/*; do
         # if [ -f "$file" ]; then
         # if [[ "$file" == *"resnet"* || "$file" == *"lenet"* || "$file" == *"mnasnet"* || "$file" == *"gpuburn5min"* ]]; then
+        if [[ "$file" == *${APP}* ]]; then
             echo "Processing: $file"
             bash $file $kernel $PERFORMANCE
-        # fi
+        fi
     done
 done
 

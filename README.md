@@ -87,21 +87,80 @@ ls data/postprocessed/stress
 6. The notebooks available in cupti/02_profiling_injection/analysis allow to explore all the analysis performed on the available data. 
 
 ## How to profile a target application from the stress perspective
-1. You will need to lunch the experiments from the 02_profiling_injection folder
+1. Before lunching the experiment you need to setup the environment to support your target application. Specially if it is a custom one. Then you need to create a script in ~/ScalableGPUMonitoring/cupti/02_profiling_injection/exe/bash/profiling_stress2/<app_name>.sh which will contain the setup for the stress monitoring along with the setup to run the application. 
+```bash
+touch ~/ScalableGPUMonitoring/cupti/02_profiling_injection/exe/bash/profiling_stress2/\<app_name\>.sh
+nano ~/ScalableGPUMonitoring/cupti/02_profiling_injection/exe/bash/profiling_stress2/\<app_name\>.sh
+```
+2. Now you need to export the following variables that will specify the target metrics to profile and the profiling granularity level.
+```bash
+export INJECTION_KERNEL_COUNT=$1
+
+# Workload
+## Compute
+export INJECTION_METRICS="sm__inst_executed.avg.per_cycle_elapsed " # Executed Ipc Elapsed
+export INJECTION_METRICS=$INJECTION_METRICS"sm__instruction_throughput.avg.pct_of_peak_sustained_active " # SM Busy
+export INJECTION_METRICS=$INJECTION_METRICS"sm__inst_executed.avg.per_cycle_active " # Executed Ipc Active
+export INJECTION_METRICS=$INJECTION_METRICS"sm__inst_issued.avg.pct_of_peak_sustained_active " # Issue Slots Busy
+export INJECTION_METRICS=$INJECTION_METRICS"sm__inst_issued.avg.per_cycle_active " # Issued Ipc Active
+export INJECTION_METRICS=$INJECTION_METRICS"smsp__sass_thread_inst_executed_op_fp64_pred_on.sum "  # inst_fp_64
+export INJECTION_METRICS=$INJECTION_METRICS"smsp__sass_thread_inst_executed_op_integer_pred_on.sum " # inst_integer
+
+## Memory 
+export INJECTION_METRICS=$INJECTION_METRICS"dram__bytes_read.sum.per_second " # dram_read_throughput
+export INJECTION_METRICS=$INJECTION_METRICS"dram__bytes_write.sum.per_second " # dram_write_throughput
+
+export INJECTION_METRICS=$INJECTION_METRICS"l1tex__t_sectors_pipe_lsu_mem_global_op_ld_lookup_hit.sum " # global_hit_rate
+export INJECTION_METRICS=$INJECTION_METRICS"l1tex__t_sectors_pipe_lsu_mem_global_op_st_lookup_hit.sum " # global_hit_rate
+export INJECTION_METRICS=$INJECTION_METRICS"l1tex__t_sectors_pipe_lsu_mem_global_op_red_lookup_hit.sum " # global_hit_rate
+export INJECTION_METRICS=$INJECTION_METRICS"l1tex__t_sectors_pipe_lsu_mem_global_op_atom_lookup_hit.sum " # global_hit_rate
+export INJECTION_METRICS=$INJECTION_METRICS"l1tex__t_sectors_pipe_lsu_mem_global_op_ld.sum " # global_hit_rate
+export INJECTION_METRICS=$INJECTION_METRICS"l1tex__t_sectors_pipe_lsu_mem_global_op_st.sum " # global_hit_rate
+export INJECTION_METRICS=$INJECTION_METRICS"l1tex__t_sectors_pipe_lsu_mem_global_op_red.sum " # global_hit_rate
+export INJECTION_METRICS=$INJECTION_METRICS"l1tex__t_sectors_pipe_lsu_mem_global_op_atom.sum " # global_hit_rate
+
+export INJECTION_METRICS=$INJECTION_METRICS"lts__t_sector_op_read_hit_rate.pct " # L2 hit rate read
+export INJECTION_METRICS=$INJECTION_METRICS"lts__t_sector_op_write_hit_rate.pct " # L2 hit rate write
+
+# Stall
+## Memory
+export INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_imc_miss_per_warp_active.pct " # stall_constant_memory_dependency
+export INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_long_scoreboard_per_warp_active.pct " # stall_memory_dependency
+
+## Controller
+export INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_wait_per_warp_active.pct " # stall_exec_dependency
+export INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_short_scoreboard_per_warp_active.pct " # stall_exec_dependency
+export INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_not_selected_per_warp_active.pct " # stall_not_selected
+export INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_sleeping_per_warp_active.pct " # stall_sleeping
+export INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_barrier_per_warp_active.pct " # stall_sync
+export INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_membar_per_warp_active.pct " # stall_sync
+
+# Throttle
+export INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_tex_throttle_per_warp_active.pct " # stall_texture
+export INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_mio_throttle_per_warp_active.pct " # stall_pipe_busy
+export INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_math_pipe_throttle_per_warp_active.pct " # stall_pipe_busy
+export INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_lg_throttle_per_warp_active.pct " # stall_memory_throttle
+export INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_drain_per_warp_active.pct " # stall_memory_throttle
+``` 
+3. In order to run the application while it is profiled you need to execute the following command:
+```bash
+env CUDA_INJECTION64_PATH=./libinjection.so \<path_to_app_binary\> \<app_parameters\> > data/raw/stress/\<app_name\>_$INJECTION_KERNEL_COUNT.txt
+```
+4. You will need to lunch the experiments from the 02_profiling_injection folder
 ```bash
 cd ~/ScalableGPUMonitoring/cupti/02_profiling_injection
 ```
-2. The bash file available at bash/profile.sh gives the possibility to analyze the performance of a specific application from the stress perspective through CUPTI (for performance counters) and NVML (for telemetry data). This will generate a complete report comprising all the metrics of interest for each tested application
+5. The bash file available at bash/profile.sh gives the possibility to analyze the performance of a specific application from the stress perspective through CUPTI (for performance counters) and NVML (for telemetry data). This will generate a complete report comprising all the metrics of interest for each tested application
 ```bash
 bash exe/complete_stress_profile.sh
 ```
 This command will execute the target applications for 5 minutes each waiting for the device cooldown for 30 minutes simultaneously monitoring Performance Counters data through CUPTI and telemetry monitoring through NVML. 
-3. If everything runs correctly, you will see some txt files in cupti/02_profiling_injection/data/raw/stress (Performance counters data) and a corresponding number of csv files in cupti/02_profiling_injection/data/postprocessed/stress (telemetry data)
+6. If everything runs correctly, you will see some txt files in cupti/02_profiling_injection/data/raw/stress (Performance counters data) and a corresponding number of csv files in cupti/02_profiling_injection/data/postprocessed/stress (telemetry data)
 ```bash
 ls data/raw/stress2
 ls data/postprocessed/stress2
 ```
-4. And eventually a json file reporting the values of the metrics of interest
+7. And eventually a json file reporting the values of the metrics of interest
 ```bash
 cat cupti/02_profiling_injection/data/postprocessed/stress/evaluation.json
 ```
