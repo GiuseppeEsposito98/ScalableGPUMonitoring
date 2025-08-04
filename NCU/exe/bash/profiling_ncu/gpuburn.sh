@@ -1,0 +1,12 @@
+echo ${PWD}
+
+export PATH="/usr/local/cuda-11.6/bin:$PATH" 
+
+ncu --csv \
+    --log-file data/raw/ncu/report.csv --force-overwrite --devices "0,1" \
+    --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 \
+    --section MemoryWorkloadAnalysis --section ComputeWorkloadAnalysis --section WarpStateStats \
+    --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes\
+    --import-source no --check-exit-code yes \
+    test-apps/gpu-burn/gpu_burn \
+    -c test-apps/gpu-burn/compare.ptx 86400

@@ -1,11 +1,9 @@
-data/
 data_analysis/
 Monitoring/
 CUPTI/
 gpu-burn/
 *.csv
 *.dat
-test-apps/
 *.so
 *.o
 gpu-burn*

@@ -83,6 +83,21 @@ def sample_telemetry(device):
         ecc_agg_uncorr
     ]
 
+    def write_row(csv_file, device):
+        # Loop di logging
+        try:
+            with open(csv_file, mode='a', newline='') as f:
+                writer = csv.writer(f)
+                while True:
+                    row= sample_telemetry(device)
+                    writer.writerow(row)
+                    f.flush()  # salva subito
+                    time.sleep(sampling_ns / 1e9)  # converti ns → sec
+        except KeyboardInterrupt:
+            print("Interrotto dall'utente.")
+        finally:
+            nvmlShutdown()
+
 def get_argparser():
     parser = argparse.ArgumentParser(description='Postprocessing for .txt data')
     parser.add_argument('--file_name', required=True, help='Input file name')
@@ -92,14 +107,15 @@ def get_argparser():
 def main(args):
 
     # Nome file
-    csv_file = f"data/postprocessed/{args.performance}/{args.file_name}_telemetry.csv"
+    csv_file0 = f"data/postprocessed/{args.performance}/{args.file_name}0_telemetry.csv"
+    csv_file1 = f"data/postprocessed/{args.performance}/{args.file_name}1_telemetry.csv"
 
     # Inizializza NVML
     nvmlInit()
-    device = nvmlDeviceGetHandleByIndex(0)  # GPU 0
+    device0 = nvmlDeviceGetHandleByIndex(0)  # GPU 0
+    device1 = nvmlDeviceGetHandleByIndex(1)  # GPU 1
 
     
-
     # Header CSV
     header = [
         "timestamp_ns", "gpu_index", "name", "temperature_C",
@@ -115,23 +131,16 @@ def main(args):
 
 
     # Scrivi header
-    with open(csv_file, mode='w', newline='') as f:
+    with open(csv_file0, mode='w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(header)
+    
+    with open(csv_file1, mode='w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(header)
 
-    # Loop di logging
-    try:
-        with open(csv_file, mode='a', newline='') as f:
-            writer = csv.writer(f)
-            while True:
-                row = sample_telemetry(device)
-                writer.writerow(row)
-                f.flush()  # salva subito
-                time.sleep(sampling_ns / 1e9)  # converti ns → sec
-    except KeyboardInterrupt:
-        print("Interrotto dall'utente.")
-    finally:
-        nvmlShutdown()
+    write_row(csv_file0, device0)
+    write_row(csv_file1, device1)
 
 
 if __name__ == '__main__':
