@@ -1,6 +1,7 @@
 import csv
 import time
 import os
+import threading
 from datetime import datetime
 from pynvml import *
 import argparse
@@ -11,9 +12,9 @@ from pynvml import (
     NVML_AGGREGATE_ECC
 )
 
+sampling_ns = 1_000_000_000  # 1 secondo
 
-def sample_telemetry(device):
-    timestamp = time.perf_counter_ns() #
+def sample_telemetry(device, index):
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
     name = nvmlDeviceGetName(device)
     temp = nvmlDeviceGetTemperature(device, NVML_TEMPERATURE_GPU)
@@ -33,38 +34,29 @@ def sample_telemetry(device):
     except NVMLError:
         power = -1
 
-    # ECC errors
     try:
-        ecc_vol_corr = nvmlDeviceGetTotalEccErrors(
-            device, NVML_MEMORY_ERROR_TYPE_CORRECTED, NVML_VOLATILE_ECC
-        )
+        ecc_vol_corr = nvmlDeviceGetTotalEccErrors(device, NVML_MEMORY_ERROR_TYPE_CORRECTED, NVML_VOLATILE_ECC)
     except NVMLError:
         ecc_vol_corr = -1
 
     try:
-        ecc_vol_uncorr = nvmlDeviceGetTotalEccErrors(
-            device, NVML_MEMORY_ERROR_TYPE_UNCORRECTED, NVML_VOLATILE_ECC
-        )
+        ecc_vol_uncorr = nvmlDeviceGetTotalEccErrors(device, NVML_MEMORY_ERROR_TYPE_UNCORRECTED, NVML_VOLATILE_ECC)
     except NVMLError:
         ecc_vol_uncorr = -1
 
     try:
-        ecc_agg_corr = nvmlDeviceGetTotalEccErrors(
-            device, NVML_MEMORY_ERROR_TYPE_CORRECTED, NVML_AGGREGATE_ECC
-        )
+        ecc_agg_corr = nvmlDeviceGetTotalEccErrors(device, NVML_MEMORY_ERROR_TYPE_CORRECTED, NVML_AGGREGATE_ECC)
     except NVMLError:
         ecc_agg_corr = -1
 
     try:
-        ecc_agg_uncorr = nvmlDeviceGetTotalEccErrors(
-            device, NVML_MEMORY_ERROR_TYPE_UNCORRECTED, NVML_AGGREGATE_ECC
-        )
+        ecc_agg_uncorr = nvmlDeviceGetTotalEccErrors(device, NVML_MEMORY_ERROR_TYPE_UNCORRECTED, NVML_AGGREGATE_ECC)
     except NVMLError:
         ecc_agg_uncorr = -1
 
     return [
         timestamp,
-        0,
+        index,
         name,
         temp,
         util.gpu,
@@ -83,65 +75,66 @@ def sample_telemetry(device):
         ecc_agg_uncorr
     ]
 
-    def write_row(csv_file, device):
-        # Loop di logging
-        try:
-            with open(csv_file, mode='a', newline='') as f:
-                writer = csv.writer(f)
-                while True:
-                    row= sample_telemetry(device)
-                    writer.writerow(row)
-                    f.flush()  # salva subito
-                    time.sleep(sampling_ns / 1e9)  # converti ns → sec
-        except KeyboardInterrupt:
-            print("Interrotto dall'utente.")
-        finally:
-            nvmlShutdown()
+def write_row(csv_file, device, index):
+    try:
+        with open(csv_file, mode='a', newline='') as f:
+            writer = csv.writer(f)
+            while True:
+                row = sample_telemetry(device, index)
+                writer.writerow(row)
+                f.flush()
+                time.sleep(sampling_ns / 1e9)
+    except KeyboardInterrupt:
+        print(f"[GPU {index}] Interrotto.")
+    except Exception as e:
+        print(f"[GPU {index}] Errore: {e}")
 
 def get_argparser():
-    parser = argparse.ArgumentParser(description='Postprocessing for .txt data')
-    parser.add_argument('--file_name', required=True, help='Input file name')
-    parser.add_argument('--performance', required=True, help='Either Performance Metrics (PM) or Performance Counters (PC)')
+    parser = argparse.ArgumentParser(description='Telemetry monitor for multiple GPUs')
+    parser.add_argument('--file_name', required=True, help='Base file name for CSV')
+    parser.add_argument('--performance', required=True, help='Performance type (e.g. PM or PC)')
     return parser
 
 def main(args):
-
-    # Nome file
-    csv_file0 = f"data/postprocessed/{args.performance}/{args.file_name}0_telemetry.csv"
-    csv_file1 = f"data/postprocessed/{args.performance}/{args.file_name}1_telemetry.csv"
-
-    # Inizializza NVML
     nvmlInit()
-    device0 = nvmlDeviceGetHandleByIndex(0)  # GPU 0
-    device1 = nvmlDeviceGetHandleByIndex(1)  # GPU 1
+    device_count = nvmlDeviceGetCount()
 
-    
-    # Header CSV
+
+    os.makedirs(f"data/postprocessed/{args.performance}", exist_ok=True)
+
     header = [
-        "timestamp_ns", "gpu_index", "name", "temperature_C",
+        "timestamp", "gpu_index", "name", "temperature_C",
         "util_gpu_percent", "util_mem_percent",
         "mem_total_MB", "mem_used_MB", "mem_free_MB",
         "clock_sm_MHz", "clock_mem_MHz", "clock_graphics_MHz",
-        "fan_speed_percent", "power_draw_W", "ecc_volatile_corrected", 
-        "ecc_volatile_uncorrected", "ecc_aggregate_corrected", "ecc_aggregate_uncorrected"
+        "fan_speed_percent", "power_draw_W",
+        "ecc_volatile_corrected", "ecc_volatile_uncorrected",
+        "ecc_aggregate_corrected", "ecc_aggregate_uncorrected"
     ]
 
-    # Sampling period (in nanosecondi)
-    sampling_ns = 1_000_000_000  # 1_000_000_000 ns = 1 s
+    threads = []
 
+    for index in range(device_count):
+        device = nvmlDeviceGetHandleByIndex(index)
+        csv_file = f"data/postprocessed/{args.performance}/{args.file_name}{index}_telemetry.csv"
 
-    # Scrivi header
-    with open(csv_file0, mode='w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(header)
-    
-    with open(csv_file1, mode='w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(header)
+        # Scrivi header CSV
+        with open(csv_file, mode='w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(header)
 
-    write_row(csv_file0, device0)
-    write_row(csv_file1, device1)
+        # Thread separato per ogni GPU
+        t = threading.Thread(target=write_row, args=(csv_file, device, index), daemon=True)
+        threads.append(t)
+        t.start()
 
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("Interrotto dall'utente.")
+    finally:
+        nvmlShutdown()
 
 if __name__ == '__main__':
     argparser = get_argparser()

@@ -29,7 +29,7 @@ for kernel in "${kernels[@]}"; do
             IFS='.' read -ra parts1 <<< "${parts[3]}"
             date +"%c"
             
-            python exe/gpu_telemetry_querying.py --file_name ${parts1[0]}_${kernel} --performance $PERFORMANCE &
+            python exe/gpu_telemetry_querying.py --file_name ${parts1[0]}_ --performance $PERFORMANCE &
             PID_CONTROLLER=$!
 
             echo "Executing: $file"
