@@ -9,3 +9,4 @@ test-apps/
 *.so
 *.o
 gpu-burn*
+*.ncu-rep
