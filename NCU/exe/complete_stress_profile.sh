@@ -5,15 +5,13 @@ PERFORMANCE="ncu"
 
 main_directory="exe/bash/profiling_$PERFORMANCE"
 # cd $main_directory
-
 export PATH="/home/g.esposito/miniconda3/bin:$PATH"
 source /home/g.esposito/miniconda3/bin/activate
 conda deactivate
 
-conda activate prova1
+conda activate gpustress
 
 kernels=(1)
-
 # Simultaneously monitoring Performance Counters and telemetry
 for kernel in "${kernels[@]}"; do
     for file in "$main_directory"/*; do

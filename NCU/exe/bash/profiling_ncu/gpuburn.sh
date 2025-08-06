@@ -15,5 +15,5 @@ ncu --csv \
     --section MemoryWorkloadAnalysis --section ComputeWorkloadAnalysis --section WarpStateStats \
     --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes\
     --import-source no --check-exit-code yes \
-    test-apps/gpu-burn/gpu_burn \
-    -c test-apps/gpu-burn/compare.ptx 86400
+    test-apps/gpu-burn/gpu_burn -m 95%\
+    -c test-apps/gpu-burn/compare.ptx 86400 
