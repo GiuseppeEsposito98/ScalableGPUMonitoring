@@ -7,7 +7,7 @@ mkdir data/postprocessed/ncu
 mkdir data/raw
 mkdir data/raw/ncu
 
-export PATH="/usr/local/cuda-11.6/bin:$PATH" 
+export PATH="/usr/local/cuda-10.1/bin:$PATH" 
 # --devices "0,1"
 nv-nsight-cu-cli --csv \
     --log-file data/raw/ncu/report.csv --force-overwrite  \
