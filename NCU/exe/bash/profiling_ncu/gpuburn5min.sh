@@ -19,5 +19,10 @@
 #     --export report.ncu-rep \
 #     --replay-mode application \
 #     --app-replay-mode relaxed ./test-apps/gpu-burnCustom/gpu_burn -i 0 -c test-apps/gpu-burnCustom/compare.ptx -stts 60s 10 1
+
+# --log-file /home/bepi/Desktop/Ph.D_/projects/GPU_stress/code/ScalableGPUMonitoring/NCU/report.csv 
 export PATH="/usr/local/cuda-12.6/bin:$PATH" 
-ncu --export /home/bepi/Desktop/Ph.D_/projects/GPU_stress/code/ScalableGPUMonitoring/NCU/report.ncu-proj --force-overwrite --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 --section SpeedOfLight_RooflineChart --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes --import-source no --check-exit-code yes /home/bepi/Desktop/Ph.D_/projects/GPU_stress/code/ScalableGPUMonitoring/NCU/test-apps/gpu-burn/gpu_burn -i 0 -c test-apps/gpu-burnCustom/compare.ptx -stts 60s 10 1
+ncu --force-overwrite --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 --section SpeedOfLight_RooflineChart --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes --import-source no --check-exit-code yes /home/bepi/Desktop/Ph.D_/projects/GPU_stress/code/ScalableGPUMonitoring/NCU/test-apps/gpu-burn/gpu_burn -i 0 -c test-apps/gpu-burnCustom/compare.ptx -stts 60
+    # --csv \
+    # --export /home/bepi/Desktop/Ph.D_/projects/GPU_stress/code/ScalableGPUMonitoring/NCU/report.csv
+    
