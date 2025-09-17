@@ -8,15 +8,15 @@ main_directory="exe/bash/profiling_$PERFORMANCE"
 inter='_'
 # cd $main_directory
 
-export PATH="~/anaconda3/bin:$PATH"
-source ~/anaconda3/bin/activate
+export PATH="/home/bepi/anaconda3/bin:$PATH"
+source /home/bepi/anaconda3/bin/activate
 conda deactivate 
 
 conda activate gpustress
 
 kernels=(1)
 
-#### Simultaneously monitoring Performance Counters and telemetry
+### Simultaneously monitoring Performance Counters and telemetry
 for kernel in "${kernels[@]}"; do
     for file in "$main_directory"/*; do
         # if ![[ "$file" == *"resnet"* || "$file" == *"lenet"* || "$file" == *"mnasnet"* || "$file" == *"gpuburn5min"* ]]; then
@@ -41,7 +41,7 @@ for kernel in "${kernels[@]}"; do
             wait "$PID_CONTROLLER" 2>/dev/null
 
             echo "End run"
-            sleep 1800
+            # sleep 1800
         fi
     done
 done
@@ -65,4 +65,4 @@ done
 
 #### Postprocess csv data to extract, from the generated csvs, the target metrics
 
-python3 exe/scripts/stress_postprocess.py $PERFORMANCE
+python3 exe/scripts/stress_postprocess.py --performance $PERFORMANCE

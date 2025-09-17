@@ -1,4 +1,5 @@
 export INJECTION_KERNEL_COUNT=$1
+run=$2
 
 # Workload
 ## Compute
@@ -46,15 +47,14 @@ export INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_math_pipe_t
 export INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_lg_throttle_per_warp_active.pct " # stall_memory_throttle
 export INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_drain_per_warp_active.pct " # stall_memory_throttle
 
-
 start_time=$(date +%s)
-end_time=$((start_time + 60))
+end_time=$((start_time + 300))
 
 while [ "$(date +%s)" -lt "$end_time" ]; do
     now=$(date +%s)
     remaining=$((end_time - now))
     [ $remaining -le 0 ] && break
-    env CUDA_INJECTION64_PATH=./libinjection.so ./test-apps/gpu-rodinia/bin/linux/cuda/backprop 65536 >> data/raw/stress2/backprop_$INJECTION_KERNEL_COUNT.txt &
+    env CUDA_INJECTION64_PATH=./libinjection.so ./test-apps/gpu-rodinia/bin/linux/cuda/gaussian -f ./test-apps/gpu-rodinia/gaussian/matrix1024.txt >> data/raw/stress2/gaussian_${INJECTION_KERNEL_COUNT}r${run}.txt &
     app_pid=$!
 
     wait_timeout=$remaining
