@@ -10,3 +10,6 @@ gpu-burn/
 *.pth
 gpu-burn*
 *.ncu-rep
+*.log
+*.txt
+Lenet
