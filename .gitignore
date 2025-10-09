@@ -6,5 +6,6 @@ gpu-burn/
 *.dat
 *.so
 *.o
+*.json
 gpu-burn*
 *.ncu-rep

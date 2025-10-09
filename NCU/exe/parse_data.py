@@ -8,55 +8,67 @@ def get_argparser():
     parser.add_argument('--performance', required=True, help='Either Performance Metrics (PM) or Performance Counters (PC)')
     return parser
 
-def main(args):
-    # Legge il contenuto del file
-    with open(f'data/raw/{args.performance}/{args.file_name}.txt', 'r') as file:
-        content = file.read()
+def parse_number(value):
+    if isinstance(value, str):
+        value = value.replace('.', '').replace(',', '.')
+        try:
+            return float(value)
+        except ValueError:
+            return None
+    return value
 
-    # Regex per trovare le sessioni
-    session_pattern = re.compile(
-        r"Context .*?session (\d+):\s*\[\s*durata:\s*([\d\-:\. ]+)\s*ms\s*\]:\s*\n+(.*?)(?=\nContext|\Z)",
-        re.DOTALL
-    )
-    # Regex per una metrica: range, metrica, valore
-    metric_pattern = re.compile(r"^\s*(\d+)\s+([a-zA-Z0-9_\.]+)\s+([\deE\+\-\.]+)\s*$", re.MULTILINE)
-
-    # Lista di righe per il DataFrame
-    df = pd.DataFrame([])
-    # Processa tutte le sessioni
-    for session_match in session_pattern.finditer(content):
+def split_metric(metric):
+        parts = metric.split('__', 1)
+        if len(parts) == 2:
+            location = parts[0]
+            rest = parts[1]
+        else:
+            location = ""
+            rest = parts[0]
         
-        session_id = session_match.group(1)
-        duration = session_match.group(2)
-        session_block = session_match.group(3)
+        segments = rest.split('.')
+        metric_name = segments[0]
+        rollup_operation = segments[1] if len(segments) > 1 else "No rollup"
+        range_name = segments[2] if len(segments) > 2 else "No post"
+        return pd.Series([location, metric_name, rollup_operation, range_name])
 
-        for metric_match in metric_pattern.finditer(session_block):
-            range_name = metric_match.group(1)
-            metric_name = metric_match.group(2)
-            metric_value = metric_match.group(3)
 
-            # Scomponi la metrica in componenti logiche
-            location = metric_name.split('__')[0]
-            name = metric_name.split('__')[1].split('.')[0]
-            rollup = metric_name.split('__')[1].split('.')[1]
+def read_clean_csv(path):
+    # Legge tutte le righe del file
+    with open(path, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
 
-            # Aggiungi al dataset
-            new_row = pd.DataFrame({
-                'session_id': session_id,
-                'duration_ms': duration if duration else None,
-                'location': location,
-                'metric_name': name,
-                'rollup_operation': rollup,
-                'range_name': range_name,
-                'metric_value': metric_value
-            }, index=[0])
+    # Mantiene solo le righe che fanno parte della tabella CSV
+    clean_lines = [l for l in lines if l.strip().startswith('"') and "," in l]
 
-            df = pd.concat([df, new_row], ignore_index=True)
+    if not clean_lines:
+        raise ValueError("⚠️ Nessuna riga CSV valida trovata nel file!")
 
-    # Salva il CSV
-    df.to_csv(f'data/postprocessed/{args.performance}/{args.file_name}.csv', index=False)
+    # Uniamo le righe filtrate e passiamo a pandas
+    from io import StringIO
+    return pd.read_csv(StringIO(''.join(clean_lines)), quotechar='"')
 
-    print("Metrics have been processed and saved.")
+def main(args):
+
+    df = read_clean_csv(f"data/raw/{args.performance}/{args.file_name}.csv")
+
+    df["Metric Value"] = df["Metric Value"].apply(parse_number)
+
+    df[["location", "metric_name", "rollup_operation", "range_name"]] = df["Metric Name"].apply(split_metric)
+
+    df["ID"] = pd.to_numeric(df["ID"], errors="coerce")
+    df = df.dropna(subset=["ID"])  # elimina eventuale riga header
+    df["session_id"] = df["ID"].astype(int) + 1
+
+    df["duration_ms"] = ""
+    df["Post"] = 0
+
+    final = df[[
+        "session_id", "duration_ms", "location", "metric_name",
+        "rollup_operation", "range_name", "Post", "Metric Value"
+    ]].rename(columns={"Metric Value": "metric_value"})
+
+    final.to_csv(f"data/postprocessed/{args.performance}/{args.file_name}.csv", index=False)
 
 if __name__ == '__main__':
     argparser = get_argparser()
