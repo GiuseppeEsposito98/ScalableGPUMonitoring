@@ -7,5 +7,6 @@ gpu-burn/
 *.so
 *.o
 *.json
+*.pth
 gpu-burn*
 *.ncu-rep
