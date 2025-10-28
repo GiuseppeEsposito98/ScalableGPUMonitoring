@@ -13,3 +13,7 @@ gpu-burn*
 *.log
 *.txt
 Lenet
+events.out.tfevents.*
+*/__pycache__/*
+*/checkpoints/*
+*/runs/*
