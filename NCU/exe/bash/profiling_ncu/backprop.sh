@@ -48,17 +48,23 @@ start_time=$(date +%s)
 end_time=$((start_time + 300))
 
 
-ncu --csv --force-overwrite --log-file data/raw/ncu/backprop_1.csv  \
-    --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 \
-    --metrics ${INJECTION_METRICS} \
-    --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes \
-    --import-source no --check-exit-code yes     \
-    ./test-apps/gpu-rodinia/bin/linux/cuda/backprop 65536
+while [ "$(date +%s)" -lt "$end_time" ]; do
+    now=$(date +%s)
+    remaining=$((end_time - now))
+    [ $remaining -le 0 ] && break
 
+    ncu --csv --force-overwrite \
+        --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 \
+        --metrics ${INJECTION_METRICS} \
+        --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes \
+        --import-source no --check-exit-code yes     \
+        ./test-apps/gpu-rodinia/bin/linux/cuda/backprop 65536 >> data/raw/ncu/backprop_1.csv
+        
+    app_pid=$!
 
+    wait_timeout=$remaining
+    (sleep "$wait_timeout" && kill -TERM $app_pid 2>/dev/null) & watchdog_pid=$!
 
-ncu --csv --log-file data/raw/ncu/backpropsass_1.csv --print-source sass --page source --force-overwrite \
-    --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 \
-    --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes    --import-source no \
-    --check-exit-code yes \
-    ./test-apps/gpu-rodinia/bin/linux/cuda/backprop 65536
+    wait $app_pid 2>/dev/null
+    kill -KILL $watchdog_pid 2>/dev/null
+done

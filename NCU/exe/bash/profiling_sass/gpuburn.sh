@@ -1,5 +1,5 @@
-# Workload
-## Compute
+echo ${PWD}
+
 INJECTION_METRICS="sm__inst_executed.avg.per_cycle_elapsed," # Executed Ipc Elapsed
 INJECTION_METRICS=$INJECTION_METRICS"sm__instruction_throughput.avg.pct_of_peak_sustained_active," # SM Busy
 INJECTION_METRICS=$INJECTION_METRICS"sm__inst_executed.avg.per_cycle_active," # Executed Ipc Active
@@ -45,15 +45,8 @@ INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_lg_throttle_per_wa
 INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_drain_per_warp_active.pct" # stall_memory_throttle
 
 
-ncu --csv --force-overwrite --log-file data/raw/stress/NN50PercLeNet5_1.csv \
-        --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 \
-        --metrics ${INJECTION_METRICS} \
-        --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes \
-        --import-source no --check-exit-code yes     \
-        # this inferences should occupy 90% of the memory with an epsilon of 3391.5 MB for 1 hour
-        python3 /home/bepi/Desktop/Ph.D_/projects/GPU_stress/code/ScalableGPUMonitoring/cupti/02_profiling_injection/test-apps/NNs/evaluate.py\
-                --model_name LeNet5 \
-                --dataset_name MNIST \
-                --batch_size 10000 \
-                --num_iterations 100 \
-                --duration 350
+ncu --csv --log-file data/raw/ncu/gpuburnsass_1.csv --print-source sass --page source --force-overwrite \
+    --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 \
+    --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes    --import-source no \
+    --check-exit-code yes \
+    test-apps/gpu-burn/gpu_burn -m 25%    -c test-apps/gpu-burn/compare.ptx 10

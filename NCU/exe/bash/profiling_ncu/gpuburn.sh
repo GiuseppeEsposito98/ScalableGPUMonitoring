@@ -51,10 +51,3 @@ ncu --csv --log-file data/raw/ncu/gpuburn_1.csv --force-overwrite \
     --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes \
     --import-source no --check-exit-code yes     \
     test-apps/gpu-burn/gpu_burn -m 20%    -c test-apps/gpu-burn/compare.ptx 10
-
-# --devices "0,1"
-ncu --csv --log-file data/raw/ncu/gpuburnsass_1.csv --print-source sass --page source --force-overwrite \
-    --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 \
-    --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes    --import-source no \
-    --check-exit-code yes \
-    test-apps/gpu-burn/gpu_burn -m 25%    -c test-apps/gpu-burn/compare.ptx 10
