@@ -45,20 +45,14 @@ INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_lg_throttle_per_wa
 INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_drain_per_warp_active.pct" # stall_memory_throttle
 
 start_time=$(date +%s)
-end_time=$((start_time + 300))
+duration=300  # secondi
 
-
-ncu --csv --force-overwrite --log-file data/raw/ncu/backprop_1.csv  \
-    --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 \
-    --metrics ${INJECTION_METRICS} \
-    --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes \
-    --import-source no --check-exit-code yes     \
-    ./test-apps/gpu-rodinia/bin/linux/cuda/backprop 65536
-
-
-
-ncu --csv --log-file data/raw/ncu/backpropsass_1.csv --print-source sass --page source --force-overwrite \
-    --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 \
-    --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes    --import-source no \
-    --check-exit-code yes \
-    ./test-apps/gpu-rodinia/bin/linux/cuda/backprop 65536
+while (( $(date +%s) - start_time < duration )); do
+    ncu --csv --force-overwrite \
+        --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 \
+        --metrics ${INJECTION_METRICS} \
+        --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes \
+        --import-source no --check-exit-code yes     \
+        ./test-apps/gpu-rodinia/bin/linux/cuda/hotspot 1024 5 5 ./test-apps/gpu-rodinia/hotspot/temp_1024 ./test-apps/gpu-rodinia/hotspot/power_1024 log.log \
+        >> data/raw/ncu/hotspot_1.csv
+done

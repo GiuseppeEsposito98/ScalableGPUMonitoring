@@ -337,7 +337,7 @@ def main(args):
     # response_time = result[0]
 
     steady_temp = telemetry_csv[telemetry_csv['Index']>125]['temperature_C'].mean()
-    print(telemetry_csv.columns)
+
     max_temp = telemetry_csv['max_temp'].mean()
 
     telemetry_csv['total_energy_J'] = telemetry_csv['total_energy_mJ']/1000
@@ -376,6 +376,7 @@ def main(args):
         "INT": 0.25,
         "ALU": 0.2,
         "SFU": 0.5,
+        "TENSOR": 0.2,
         "Const_SM": 0.813,
     }
 
@@ -392,6 +393,7 @@ def main(args):
 
     counts = {k: 0 for k in max_power}
     count = 0
+    print(counts.keys())
     for _, row in opcode_counts.iterrows():
         opcode = row["Opcode"]
         count = row["count"]

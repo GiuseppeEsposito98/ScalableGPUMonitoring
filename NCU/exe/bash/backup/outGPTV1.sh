@@ -44,15 +44,11 @@ INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_math_pipe_throttle
 INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_lg_throttle_per_warp_active.pct," # stall_memory_throttle
 INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_drain_per_warp_active.pct" # stall_memory_throttle
 
+# timeout_duration=20
 
-ncu --csv --force-overwrite --log-file data/raw/ncu/NN50Percmobilenetv2_1.csv \
-        --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 \
-        --metrics ${INJECTION_METRICS} \
-        --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes \
-        --import-source no --check-exit-code yes \
-        python3 /home/g.esposito/ScalableGPUMonitoring/NCU/test-apps/NNs/evaluate.py\
-                --model_name mobilenet_v2 \
-                --dataset_name CIFAR10 \
-                --batch_size 2048 \
-                --num_iterations 10000000000000000000 \
-                --duration 300
+ncu --csv --force-overwrite --log-file data/raw/ncu/outGPTV1_1.csv \
+    --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 \
+    --metrics ${INJECTION_METRICS} \
+    --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes \
+    --import-source no --check-exit-code yes     \
+    ./test-apps/LLMs-generated/outGPTV1  

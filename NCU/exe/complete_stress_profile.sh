@@ -1,6 +1,6 @@
 #!/bin/bash
 APP=$1
-CUDA_VERSION='12.6'
+CUDA_VERSION='11.6'
 
 PERFORMANCE="ncu"
 
@@ -10,7 +10,7 @@ export PATH="/home/g.esposito/miniconda3/bin:$PATH"
 source /home/g.esposito/miniconda3/bin/activate
 conda deactivate
 
-conda activate gpustress
+conda activate LLMstress
 
 export PATH="/usr/local/cuda-${CUDA_VERSION}/bin:$PATH"
 
@@ -40,6 +40,30 @@ for kernel in "${kernels[@]}"; do
             wait "$PID_CONTROLLER" 2>/dev/null
 
             echo "End run"
+
+            sleep 1800
+        fi
+    done
+done
+
+
+PERFORMANCE="sass"
+main_directory="exe/bash/profiling_$PERFORMANCE"
+
+
+kernels=(1)
+# Simultaneously monitoring Performance Counters and telemetry
+for kernel in "${kernels[@]}"; do
+    for file in "$main_directory"/*; do
+        # if ![[ "$file" == *"resnet"* || "$file" == *"lenet"* || "$file" == *"mnasnet"* || "$file" == *"gpuburn5min"* ]]; then
+            if [[ "$file" == *${APP}* ]]; then
+
+            echo "Executing: $file for SASS profiling"
+            bash $file $kernel 
+
+            echo "End run"
+
+            # sleep 1800
         fi
     done
 done
@@ -61,6 +85,18 @@ for kernel in "${kernels[@]}"; do
     done
 done
 
-#### Postprocess csv data to extract, from the generated csvs, the target metrics
+### Postprocess csv data to extract, from the generated csvs, the target metrics
 
-python3 exe/scripts/stress_postprocess.py --performance $PERFORMANCE  --app $APP
+for kernel in "${kernels[@]}"; do
+    for file in "$main_directory"/*; do
+        # if [ -f "$file" ]; then
+        # if [[ "$file" == *"resnet"* || "$file" == *"lenet"* || "$file" == *"mnasnet"* || "$file" == *"gpuburn5min"* ]]; then
+        echo $file
+        if [[ "$file" == *${APP}* ]]; then
+            IFS='/' read -ra parts <<< "$file"
+            IFS='.' read -ra parts1 <<< "${parts[3]}"
+            echo Processing: ${parts1[0]}
+            python3 exe/scripts/stress_postprocess.py --performance $PERFORMANCE  --app ${parts1[0]}
+        fi
+    done
+done

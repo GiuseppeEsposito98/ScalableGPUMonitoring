@@ -1,5 +1,5 @@
-echo ${PWD}
-
+# Workload
+## Compute
 INJECTION_METRICS="sm__inst_executed.avg.per_cycle_elapsed," # Executed Ipc Elapsed
 INJECTION_METRICS=$INJECTION_METRICS"sm__instruction_throughput.avg.pct_of_peak_sustained_active," # SM Busy
 INJECTION_METRICS=$INJECTION_METRICS"sm__inst_executed.avg.per_cycle_active," # Executed Ipc Active
@@ -44,17 +44,15 @@ INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_math_pipe_throttle
 INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_lg_throttle_per_warp_active.pct," # stall_memory_throttle
 INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_drain_per_warp_active.pct" # stall_memory_throttle
 
+start_time=$(date +%s)
+duration=300  # secondi
 
-ncu --csv --log-file data/raw/ncu/gpuburn_1.csv --force-overwrite \
-    --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 \
-    --metrics ${INJECTION_METRICS} \
-    --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes \
-    --import-source no --check-exit-code yes     \
-    test-apps/gpu-burn/gpu_burn -m 20%    -c test-apps/gpu-burn/compare.ptx 10
-
-# --devices "0,1"
-ncu --csv --log-file data/raw/ncu/gpuburnsass_1.csv --print-source sass --page source --force-overwrite \
-    --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 \
-    --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes    --import-source no \
-    --check-exit-code yes \
-    test-apps/gpu-burn/gpu_burn -m 25%    -c test-apps/gpu-burn/compare.ptx 10
+while (( $(date +%s) - start_time < duration )); do
+    ncu --csv --force-overwrite \
+        --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 \
+        --metrics ${INJECTION_METRICS} \
+        --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes \
+        --import-source no --check-exit-code yes     \
+        ./test-apps/gpu-rodinia/bin/linux/cuda/needle 1024 5 \
+        >> data/raw/ncu/needle_1.csv
+done

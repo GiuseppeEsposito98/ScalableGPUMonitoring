@@ -40,7 +40,6 @@ def read_clean_csv(path):
 
     # Mantiene solo le righe che fanno parte della tabella CSV
     clean_lines = [l for l in lines if l.strip().startswith('"') and "," in l]
-
     if not clean_lines:
         raise ValueError("⚠️ Nessuna riga CSV valida trovata nel file!")
 

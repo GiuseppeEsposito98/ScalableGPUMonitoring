@@ -31,27 +31,27 @@ def sample_telemetry(device):
 
     try:
         total_energy = nvmlDeviceGetTotalEnergyConsumption(device)
-    except NVMLError:
+    except:
         total_energy = -1
     
     try:
         clock_freq = nvmlDeviceGetAdaptiveClockInfoStatus(device)
-    except NVMLError:
+    except:
         clock_freq = -1
 
     try:
         adaptive_clock_freq = nvmlDeviceGetCurrentClockFreqs(device)
-    except NVMLError:
+    except:
         adaptive_clock_freq = -1
 
     try:
         fan = nvmlDeviceGetFanSpeed(device)
-    except NVMLError:
+    except:
         fan = -1
 
     try:
         power = nvmlDeviceGetPowerUsage(device) / 1000.0
-    except NVMLError:
+    except:
         power = -1
 
     # ECC errors
@@ -59,29 +59,30 @@ def sample_telemetry(device):
         ecc_vol_corr = nvmlDeviceGetTotalEccErrors(
             device, NVML_MEMORY_ERROR_TYPE_CORRECTED, NVML_VOLATILE_ECC
         )
-    except NVMLError:
+    except:
         ecc_vol_corr = -1
 
     try:
         ecc_vol_uncorr = nvmlDeviceGetTotalEccErrors(
             device, NVML_MEMORY_ERROR_TYPE_UNCORRECTED, NVML_VOLATILE_ECC
         )
-    except NVMLError:
+    except:
         ecc_vol_uncorr = -1
 
     try:
         ecc_agg_corr = nvmlDeviceGetTotalEccErrors(
             device, NVML_MEMORY_ERROR_TYPE_CORRECTED, NVML_AGGREGATE_ECC
         )
-    except NVMLError:
+    except:
         ecc_agg_corr = -1
 
     try:
         ecc_agg_uncorr = nvmlDeviceGetTotalEccErrors(
             device, NVML_MEMORY_ERROR_TYPE_UNCORRECTED, NVML_AGGREGATE_ECC
         )
-    except NVMLError:
+    except:
         ecc_agg_uncorr = -1
+    
 
     return [
         timestamp,

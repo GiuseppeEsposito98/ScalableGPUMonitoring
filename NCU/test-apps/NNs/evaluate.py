@@ -71,14 +71,14 @@ class LeNet5(torch.nn.Module):
         out = self.softmax(out)
         return out
 
-def timed(fn):
-    start = torch.cuda.Event(enable_timing=True)
-    end = torch.cuda.Event(enable_timing=True)
-    start.record()
-    result = fn()
-    end.record()
-    torch.cuda.synchronize()
-    return result, start.elapsed_time(end) / 1000
+# def timed(fn):
+#     start = torch.cuda.Event(enable_timing=True)
+#     end = torch.cuda.Event(enable_timing=True)
+#     start.record()
+#     result = fn()
+#     end.record()
+#     torch.cuda.synchronize()
+#     return result, start.elapsed_time(end) / 1000
 
 def get_transformations(dataset_name):
     """Return appropriate transformations based on dataset."""
@@ -125,7 +125,7 @@ def get_model(model_name):
     return model
 
 def get_dataset(dataset_name, transform):
-    root_data_path = '~/dataset'
+    root_data_path = '/home/dataset'
     if dataset_name not in datasets.__dict__:
         raise ValueError(f"Dataset {dataset_name} not found in torchvision.datasets")
     
@@ -161,18 +161,20 @@ def evaluate(model, dataloader, device, iterations, duration, start, verbose):
                 step += 1
                 print(f'Running step: {step}')
                 inputs, labels = inputs.to(device), labels.to(device)
-                outputs, elapsed_time = timed(lambda: model(inputs))
-                if it_idx==0 and verbose:
-                    eager_times_per_it.append(elapsed_time)
-                    # print(f'Eager eval time: {elapsed_time}')
-                elif it_idx != 0 and verbose: 
-                    compile_times_per_it.append(elapsed_time)
-                    # print(f'Eval time from compiled NN: {elapsed_time}')
-                _, preds = torch.max(outputs, 1)
-                correct += (preds == labels).sum().item()
-                total += labels.size(0)
+                # outputs, elapsed_time = timed(lambda: model(inputs))
+                outputs = model(inputs)
+                # if it_idx==0 and verbose:
+                #     eager_times_per_it.append(elapsed_time)
+                #     # print(f'Eager eval time: {elapsed_time}')
+                # elif it_idx != 0 and verbose: 
+                #     compile_times_per_it.append(elapsed_time)
+                #     # print(f'Eval time from compiled NN: {elapsed_time}')
+                # _, preds = torch.max(outputs, 1)
+                # correct += (preds == labels).sum().item()
+                # total += labels.size(0)
                 end = time()
-                print(f'Duration: {end-start}')
+                # print(f'Duration: {end-start}')
+                print(end-start)
                 if end-start > duration:
                     break
             if end-start > duration:
@@ -180,11 +182,11 @@ def evaluate(model, dataloader, device, iterations, duration, start, verbose):
                 print(f'Indice iterazione: {it_idx}')
                 print('******************************')
                 break
-            if it_idx==0 and verbose:
-                eager_times.append(np.median(eager_times_per_it))
-            elif it_idx!=0 and verbose:
-                compile_times.append(np.median(compile_times_per_it))
-            accuracy[it_idx] = f'{100 * correct / total}%'
+            # if it_idx==0 and verbose:
+            #     eager_times.append(np.median(eager_times_per_it))
+            # elif it_idx!=0 and verbose:
+            #     compile_times.append(np.median(compile_times_per_it))
+            # accuracy[it_idx] = f'{100 * correct / total}%'
 
     if verbose:
         eager_med = np.median(eager_times)

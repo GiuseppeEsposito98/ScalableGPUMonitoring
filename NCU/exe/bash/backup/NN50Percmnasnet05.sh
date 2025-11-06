@@ -44,21 +44,15 @@ INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_math_pipe_throttle
 INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_lg_throttle_per_warp_active.pct," # stall_memory_throttle
 INJECTION_METRICS=$INJECTION_METRICS"smsp__warp_issue_stalled_drain_per_warp_active.pct" # stall_memory_throttle
 
-start_time=$(date +%s)
-end_time=$((start_time + 300))
 
-
-ncu --csv --force-overwrite --log-file data/raw/ncu/hotspot_1.csv \
-    --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 \
-    --metrics ${INJECTION_METRICS} \
-    --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes \
-    --import-source no --check-exit-code yes     \
-    ./test-apps/gpu-rodinia/bin/linux/cuda/hotspot 1024 5 5 ./test-apps/gpu-rodinia/hotspot/temp_1024 ./test-apps/gpu-rodinia/hotspot/power_1024 log.log
-
-
-
-ncu --csv --log-file data/raw/ncu/hotspotsass_1.csv --print-source sass --page source --force-overwrite \
-    --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 \
-    --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes    --import-source no \
-    --check-exit-code yes \
-    ./test-apps/gpu-rodinia/bin/linux/cuda/hotspot 1024 5 5 ./test-apps/gpu-rodinia/hotspot/temp_1024 ./test-apps/gpu-rodinia/hotspot/power_1024 log.log 
+ncu --csv --force-overwrite --log-file data/raw/ncu/NN50Percmnasnet05_1.csv \
+        --target-processes all --replay-mode kernel --kernel-name-base function --launch-skip-before-match 0 \
+        --metrics ${INJECTION_METRICS} \
+        --profile-from-start 1 --cache-control all --clock-control base --apply-rules yes \
+        --import-source no --check-exit-code yes \
+        python3 /home/g.esposito/ScalableGPUMonitoring/NCU/test-apps/NNs/evaluate.py\
+                --model_name mnasnet0_5 \
+                --dataset_name CIFAR10 \
+                --batch_size 10000 \
+                --num_iterations 10000000000000000000 \
+                --duration 300
